@@ -12,8 +12,8 @@ class AppRoutes {
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeView()),
-    GetPage(name: login, page: () => LoginView()),
-    GetPage(name: registration, page: () => RegistrationView()),
-    GetPage(name: continueWithoutRegistering, page: () => ContinueView()),
+    GetPage(name: login, page: () => const LoginView()),
+    GetPage(name: registration, page: () => const RegistrationView()),
+    GetPage(name: continueWithoutRegistering, page: () => const ContinueView()),
   ];
 }
