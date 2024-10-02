@@ -1,14 +1,99 @@
-// Importamos las bibliotecas necesarias para la interfaz de usuario (Material) y GetX para la gestión de estado y rutas.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// Importamos el controlador de tema para manejar el cambio de tema en la aplicación.
 import '../controllers/theme_controller.dart';
+import 'dart:math' as math;
 
+// AnimatedIconButton Widget
+class AnimatedIconButton extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final Color iconColor;
+
+  const AnimatedIconButton({
+    Key? key,
+    required this.icon,
+    required this.onPressed,
+    required this.iconColor,
+  }) : super(key: key);
+
+  @override
+  _AnimatedIconButtonState createState() => _AnimatedIconButtonState();
+}
+
+class _AnimatedIconButtonState extends State<AnimatedIconButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat();
+    _animation = Tween<double>(begin: 0, end: 2 * math.pi).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onPressed,
+      child: AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) {
+          return CustomPaint(
+            painter: CircleAnimationPainter(_animation.value, widget.iconColor),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(widget.icon, size: 30, color: widget.iconColor),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CircleAnimationPainter extends CustomPainter {
+  final double angle;
+  final Color color;
+
+  CircleAnimationPainter(this.angle, this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) / 2;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -math.pi / 2,
+      angle,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+// HomeView Widget
 class HomeView extends StatelessWidget {
-  // Creamos una instancia del controlador de tema usando Get.find() para gestionar los cambios de tema.
   final ThemeController _themeController = Get.find();
 
-  // Constructor de HomeView
   HomeView({super.key});
 
   @override
@@ -22,31 +107,25 @@ class HomeView extends StatelessWidget {
             Obx(() => Text(
                   "La app que cuida tu hogar, donde tú estés.",
                   style: TextStyle(
-                    fontSize: 18, // Aumentar tamaño de letra
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: _themeController.isDarkMode.value
-                        ? Colors.white
-                        : Color.fromARGB(
-                            255, 24, 54, 80), // Cambia según el tema
+                        ? Colors.white70
+                        : Color.fromARGB(255, 24, 54, 80),
                   ),
                 )),
-            const SizedBox(height: 20), // Espacio entre el eslogan y el ícono
+            const SizedBox(height: 20),
 
-            // Ícono de cambio de tema con Obx para escuchar cambios
-            Obx(() => IconButton(
-                  icon: Icon(
-                    _themeController.isDarkMode.value
-                        ? Icons.bedtime // Ícono de luna
-                        : Icons.wb_sunny, // Ícono de sol
-                    size: 30, // Icono más grande
-                    color: _themeController.isDarkMode.value
-                        ? Color.fromARGB(
-                      255, 24, 54, 80) // Color azul para luna
-                        : Colors.yellowAccent, // Color amarillo para sol
-                  ),
+            // AnimatedIconButton para cambio de tema
+            Obx(() => AnimatedIconButton(
+                  icon: _themeController.isDarkMode.value
+                      ? Icons.bedtime
+                      : Icons.wb_sunny,
+                  iconColor: _themeController.isDarkMode.value
+                      ? Colors.yellowAccent
+                      : Color.fromARGB(255, 24, 54, 80),
                   onPressed: () {
-                    _themeController
-                        .toggleTheme(); // Cambia el tema al hacer clic
+                    _themeController.toggleTheme();
                   },
                 )),
 
@@ -62,7 +141,7 @@ class HomeView extends StatelessWidget {
             Obx(() => Divider(
                   color: _themeController.isDarkMode.value
                       ? Colors.white70
-                      : Colors.black87, // Cambia según el tema
+                      : Colors.black87,
                   thickness: 0.5,
                   indent: 100,
                   endIndent: 100,
@@ -73,8 +152,7 @@ class HomeView extends StatelessWidget {
             _buildElevatedButton(
               icon: Icons.login,
               text: 'Iniciar Sesión',
-              onPressed: () => Get.toNamed(
-                  '/login'), // Navegar a la vista de inicio de sesión
+              onPressed: () => Get.toNamed('/login'),
             ),
             const SizedBox(height: 20),
 
@@ -82,8 +160,7 @@ class HomeView extends StatelessWidget {
             _buildElevatedButton(
               icon: Icons.person_outline,
               text: 'Continuar sin Registrarse',
-              onPressed: () =>
-                  Get.toNamed('/continue'), // Navegar a la vista sin registro
+              onPressed: () => Get.toNamed('/continue'),
             ),
             const SizedBox(height: 20),
 
@@ -91,8 +168,7 @@ class HomeView extends StatelessWidget {
             _buildElevatedButton(
               icon: Icons.person_add,
               text: 'Crear mi Cuenta',
-              onPressed: () => Get.toNamed(
-                  '/registration'), // Navegar a la vista de registro
+              onPressed: () => Get.toNamed('/registration'),
             ),
             const SizedBox(height: 30),
 
@@ -100,7 +176,7 @@ class HomeView extends StatelessWidget {
             Obx(() => Divider(
                   color: _themeController.isDarkMode.value
                       ? Colors.white70
-                      : Colors.black87, // Cambia según el tema
+                      : Colors.black87,
                   thickness: 1,
                   indent: 100,
                   endIndent: 100,
@@ -112,25 +188,25 @@ class HomeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 100),
                       child: Text(
                         "©copyright DICyT-2024",
                         style: TextStyle(
                           color: _themeController.isDarkMode.value
                               ? Colors.white70
-                              : Colors.black87, // Cambia según el tema
+                              : Colors.black87,
                           fontSize: 12,
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 100),
                       child: Text(
                         "©copyright UATF-2024",
                         style: TextStyle(
                           color: _themeController.isDarkMode.value
                               ? Colors.white70
-                              : Colors.black87, // Cambia según el tema
+                              : Colors.black87,
                           fontSize: 12,
                         ),
                       ),
@@ -157,8 +233,7 @@ class HomeView extends StatelessWidget {
               icon,
               color: _themeController.isDarkMode.value
                   ? Colors.black87
-                  : Colors
-                      .white70, // Color del ícono: negro en modo oscuro, blanco en modo claro
+                  : Colors.white70,
             ),
             label: Text(
               text,
@@ -166,21 +241,20 @@ class HomeView extends StatelessWidget {
                 fontSize: 20,
                 color: _themeController.isDarkMode.value
                     ? Colors.black
-                    : Colors.white, // Color del texto según el tema
+                    : Colors.white,
               ),
             ),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               backgroundColor: _themeController.isDarkMode.value
                   ? Colors.white
-                  : const Color.fromARGB(
-                      255, 24, 54, 80), // Color de los botones
+                  : const Color.fromARGB(255, 24, 54, 80),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20), // Bordes redondeados
+                borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
                   color: _themeController.isDarkMode.value
                       ? const Color.fromARGB(255, 3, 3, 3)
-                      : Colors.black87, // Borde según el tema
+                      : Colors.black87,
                 ),
               ),
             ),
