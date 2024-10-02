@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "508250648779",
+    "project_id": "anuncios-domicilio-a5765",
+    "storage_bucket": "anuncios-domicilio-a5765.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508250648779:android:4665359ea870324bdaab4e",
+        "android_client_info": {
+          "package_name": "com.miempresa.anuncios_domicilio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508250648779-d385jitcf2mbvjr5qlc7f9mfq8em8b25.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miempresa.anuncios_domicilio",
+            "certificate_hash": "e3ef326dee8faadcf0ad0d14903ab074c8924881"
+          }
+        },
+        {
+          "client_id": "508250648779-jrvj89se95hgb2gr14roev61rerfbb07.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4OmJmxzFg9dG8D52gfNReH4t5XxlWnYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508250648779-jrvj89se95hgb2gr14roev61rerfbb07.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "508250648779-kqu40s4jfs9u5g2rh0ejjsn9nq8kl53d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.miempresa.anuncios_domicilio"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508250648779:android:d9cd109150b415cfdaab4e",
+        "android_client_info": {
+          "package_name": "com.miempresa.anuncios_domicilio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508250648779-3uqcd2ilh9qhov1kl73lfspst7nm0n3a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miempresa.anuncios_domicilio",
+            "certificate_hash": "e3ef326dee8faadcf0ad0d14903ab074c8924881"
+          }
+        },
+        {
+          "client_id": "508250648779-jrvj89se95hgb2gr14roev61rerfbb07.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4OmJmxzFg9dG8D52gfNReH4t5XxlWnYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508250648779-jrvj89se95hgb2gr14roev61rerfbb07.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "508250648779-kqu40s4jfs9u5g2rh0ejjsn9nq8kl53d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.miempresa.anuncios_domicilio"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
