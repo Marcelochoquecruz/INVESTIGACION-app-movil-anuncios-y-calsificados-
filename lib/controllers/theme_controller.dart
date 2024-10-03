@@ -1,11 +1,14 @@
-import 'package:get/get.dart';
+// lib/controllers/theme_controller.dart
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ThemeController extends GetxController {
-  var isDarkMode = false.obs;
+  var isDarkTheme = false.obs;
+
+  ThemeMode get theme => isDarkTheme.value ? ThemeMode.dark : ThemeMode.light;
 
   void toggleTheme() {
-    isDarkMode.value = !isDarkMode.value;
-    Get.changeTheme(isDarkMode.value ? ThemeData.dark() : ThemeData.light());
+    isDarkTheme.value = !isDarkTheme.value;
+    Get.changeThemeMode(isDarkTheme.value ? ThemeMode.dark : ThemeMode.light);
   }
 }

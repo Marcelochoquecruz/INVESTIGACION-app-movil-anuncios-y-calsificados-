@@ -1,264 +1,116 @@
+// lib/views/home_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/theme_controller.dart';
-import 'dart:math' as math;
 
-// AnimatedIconButton Widget
-class AnimatedIconButton extends StatefulWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final Color iconColor;
-
-  const AnimatedIconButton({
-    Key? key,
-    required this.icon,
-    required this.onPressed,
-    required this.iconColor,
-  }) : super(key: key);
-
-  @override
-  _AnimatedIconButtonState createState() => _AnimatedIconButtonState();
-}
-
-class _AnimatedIconButtonState extends State<AnimatedIconButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )..repeat();
-    _animation = Tween<double>(begin: 0, end: 2 * math.pi).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPressed,
-      child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return CustomPaint(
-            painter: CircleAnimationPainter(_animation.value, widget.iconColor),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(widget.icon, size: 30, color: widget.iconColor),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class CircleAnimationPainter extends CustomPainter {
-  final double angle;
-  final Color color;
-
-  CircleAnimationPainter(this.angle, this.color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color.withOpacity(0.5)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2,
-      angle,
-      false,
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-// HomeView Widget
 class HomeView extends StatelessWidget {
-  final ThemeController _themeController = Get.find();
-
-  HomeView({super.key});
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.put(ThemeController());
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('¡Relájate!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: () => themeController.toggleTheme(),
+          )
+        ],
+        // Estilos añadidos para el AppBar
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.lightBlueAccent, // Color del borde
+            width: 1.0, // Grosor del borde
+          ),
+        ),
+        elevation: themeController.isDarkTheme.value ? 4 : 6, // Sombra del AppBar
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Eslogan encima del ícono de cambio de tema
-            Obx(() => Text(
-                  "La app que cuida tu hogar, donde tú estés.",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: _themeController.isDarkMode.value
-                        ? Colors.white70
-                        : Color.fromARGB(255, 24, 54, 80),
-                  ),
-                )),
-            const SizedBox(height: 20),
-
-            // AnimatedIconButton para cambio de tema
-            Obx(() => AnimatedIconButton(
-                  icon: _themeController.isDarkMode.value
-                      ? Icons.bedtime
-                      : Icons.wb_sunny,
-                  iconColor: _themeController.isDarkMode.value
-                      ? Colors.yellowAccent
-                      : Color.fromARGB(255, 24, 54, 80),
-                  onPressed: () {
-                    _themeController.toggleTheme();
-                  },
-                )),
-
-            // Logo de la aplicación
             Image.asset(
               'lib/assets/logo1.png',
-              width: 150,
-              height: 150,
+              height: 130,
             ),
-            const SizedBox(height: 5),
-
-            // Línea divisora que cambia de color según el tema
-            Obx(() => Divider(
-                  color: _themeController.isDarkMode.value
-                      ? Colors.white70
-                      : Colors.black87,
-                  thickness: 0.5,
-                  indent: 100,
-                  endIndent: 100,
-                )),
-            const SizedBox(height: 20),
-
-            // Botón "Iniciar Sesión"
-            _buildElevatedButton(
-              icon: Icons.login,
-              text: 'Iniciar Sesión',
-              onPressed: () => Get.toNamed('/login'),
+            const SizedBox(height: 10),
+            const Text(
+              'Deja el trabajo duro a nosotros',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3.0,
+                    color: Colors.black45,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-
-            // Botón "Continuar sin Registrarse"
-            _buildElevatedButton(
-              icon: Icons.person_outline,
-              text: 'Continuar sin Registrarse',
-              onPressed: () => Get.toNamed('/continue'),
-            ),
-            const SizedBox(height: 20),
-
-            // Botón "Crear mi Cuenta"
-            _buildElevatedButton(
-              icon: Icons.person_add,
-              text: 'Crear mi Cuenta',
-              onPressed: () => Get.toNamed('/registration'),
+            const Text(
+              'Tú solo relájate y disfruta',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 3.0,
+                    color: Colors.black45,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 30),
-
-            // Segunda línea divisora que cambia de color según el tema
-            Obx(() => Divider(
-                  color: _themeController.isDarkMode.value
-                      ? Colors.white70
-                      : Colors.black87,
-                  thickness: 1,
-                  indent: 100,
-                  endIndent: 100,
-                )),
+            _buildButton(context, 'Iniciar Sesión', Icons.lock, '/login'),
+            const SizedBox(height: 15),
+            _buildButton(context, 'Continuar sin Registrarse', Icons.input, '/continue'),
+            const SizedBox(height: 15),
+            _buildButton(context, 'Crear Cuenta', Icons.person_add, '/registration'),
+            const SizedBox(height: 30),
+            // Nueva línea divisoria con sombreado
+            Container(
+              width: MediaQuery.of(context).size.width * 0.6, // Ancho de los botones
+              alignment: Alignment.center,
+              
+            ),
             const SizedBox(height: 10),
-
-            // Línea de copyright con colores que cambian según el tema
-            Obx(() => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 100),
-                      child: Text(
-                        "©copyright DICyT-2024",
-                        style: TextStyle(
-                          color: _themeController.isDarkMode.value
-                              ? Colors.white70
-                              : Colors.black87,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 100),
-                      child: Text(
-                        "©copyright UATF-2024",
-                        style: TextStyle(
-                          color: _themeController.isDarkMode.value
-                              ? Colors.white70
-                              : Colors.black87,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround, // Menos separación
+              children: [
+                Text('© DyCIT-2024', style: TextStyle(fontSize: 12)),
+                Text('© UATF-2024', style: TextStyle(fontSize: 12)),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  // Método para construir un botón elevado con un ícono y texto
-  Widget _buildElevatedButton({
-    required IconData icon,
-    required String text,
-    required VoidCallback onPressed,
-  }) {
+  Widget _buildButton(BuildContext context, String text, IconData icon, String route) {
+    final ThemeController themeController = Get.find<ThemeController>();
     return SizedBox(
-      width: 320,
-      child: Obx(() => ElevatedButton.icon(
-            onPressed: onPressed,
-            icon: Icon(
-              icon,
-              color: _themeController.isDarkMode.value
-                  ? Colors.black87
-                  : Colors.white70,
-            ),
-            label: Text(
-              text,
-              style: TextStyle(
-                fontSize: 20,
-                color: _themeController.isDarkMode.value
-                    ? Colors.black
-                    : Colors.white,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              backgroundColor: _themeController.isDarkMode.value
-                  ? Colors.white
-                  : const Color.fromARGB(255, 24, 54, 80),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: _themeController.isDarkMode.value
-                      ? const Color.fromARGB(255, 3, 3, 3)
-                      : Colors.black87,
-                ),
-              ),
-            ),
-          )),
+      width: MediaQuery.of(context).size.width * 0.6,
+      child: ElevatedButton.icon(
+        onPressed: () => Get.toNamed(route),
+        icon: Icon(icon, size: 24),
+        label: Text(text),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          textStyle: const TextStyle(fontSize: 16),
+          elevation: themeController.isDarkTheme.value ? 6 : 10,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          side: const BorderSide(color: Colors.lightBlueAccent, width: 1),
+          shadowColor: themeController.isDarkTheme.value ? Colors.white24 : Colors.black38,
+        ),
+      ),
     );
   }
 }
