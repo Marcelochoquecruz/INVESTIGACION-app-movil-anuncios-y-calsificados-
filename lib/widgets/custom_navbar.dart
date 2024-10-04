@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/theme_controller.dart';
+import 'menu_options.dart';
 
 class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -9,29 +9,31 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeController themeController = Get.find<ThemeController>();
-
     return AppBar(
-      title: Text(title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      backgroundColor: Colors.deepPurple,
+      title: Text(
+        title,
+        style: const TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+          Get.back();
+        },
+      ),
       actions: [
         PopupMenuButton<String>(
           onSelected: (value) {
-            if (value == 'theme') {
-              themeController.toggleTheme();
-            } else if (value == 'about') {
-              Get.toNamed('/about');
-            }
+            // No necesitas lógica aquí, la maneja MenuOptions
           },
+          icon: const Icon(Icons.menu, color: Colors.white),
           itemBuilder: (BuildContext context) {
             return [
-              const PopupMenuItem<String>(
-                value: 'theme',
-                child: Text('Cambiar de tema'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'about',
-                child: Text('Acerca de nosotros'),
+              PopupMenuItem<String>(
+                value: 'menu',
+                child: MenuOptions(
+                    isDrawer: false), // Usamos el widget reutilizable
               ),
             ];
           },
@@ -39,11 +41,10 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
       ],
       shape: const Border(
         bottom: BorderSide(
-          color: Colors.lightBlueAccent,
+          color: Colors.deepPurpleAccent,
           width: 1.0,
         ),
       ),
-      elevation: themeController.isDarkTheme.value ? 4 : 6,
     );
   }
 

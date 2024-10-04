@@ -9,20 +9,20 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final ThemeController themeController = ThemeController();
-
   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(themeController);
+    // Inicia el controlador de tema y lo pone a disposición globalmente
+    final ThemeController themeController = Get.put(ThemeController());
+
     return Obx(() => GetMaterialApp(
           title: 'Anuncios Domicilio',
           themeMode: themeController.isDarkTheme.value ? ThemeMode.dark : ThemeMode.light,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
-          initialRoute: '/',
-          getPages: AppRoutes.routes,
+          initialRoute: '/', // Ruta inicial de la app
+          getPages: AppRoutes.routes, // Configuración de las rutas
           debugShowCheckedModeBanner: false, // Desactivar el debug banner
         ));
   }

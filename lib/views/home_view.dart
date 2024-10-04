@@ -6,30 +6,22 @@ class WaveShape extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.blue.withOpacity(0.3) // Color con opacidad
+      ..color = Colors.grey.withOpacity(0.3) // Color con opacidad
       ..style = PaintingStyle.fill;
 
     final path = Path();
 
     // Dibujar una forma de onda suave para el estilo bancario
     path.moveTo(0, size.height);
-    
+
     // Primera onda
-    path.quadraticBezierTo(
-      size.width * 0.25, 
-      size.height * 0.8, 
-      size.width * 0.5, 
-      size.height * 0.9
-    );
-    
+    path.quadraticBezierTo(size.width * 0.25, size.height * 0.8,
+        size.width * 0.5, size.height * 0.9);
+
     // Segunda onda
     path.quadraticBezierTo(
-      size.width * 0.75, 
-      size.height, 
-      size.width, 
-      size.height * 0.8
-    );
-    
+        size.width * 0.75, size.height, size.width, size.height * 0.8);
+
     // Cerrar el path
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
@@ -37,15 +29,13 @@ class WaveShape extends CustomPainter {
 
     // Añadir un círculo sutil para representar un sol o luna
     path.addOval(Rect.fromCircle(
-      center: Offset(size.width * 0.8, size.height * 0.2), 
-      radius: size.width * 0.08
-    ));
+        center: Offset(size.width * 0.8, size.height * 0.2),
+        radius: size.width * 0.08));
 
     // Añadir una línea horizontal para dar profundidad
     path.moveTo(0, size.height * 0.6);
     path.lineTo(size.width, size.height * 0.6);
-    
-    
+
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
 
@@ -55,8 +45,6 @@ class WaveShape extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
-
-
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -74,15 +62,6 @@ class HomeView extends StatelessWidget {
               height: MediaQuery.of(context).size.height,
             ),
           ),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: IconButton(
-              icon: const Icon(Icons.brightness_6),
-              onPressed: () => themeController.toggleTheme(),
-              iconSize: 30,
-            ),
-          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -92,39 +71,37 @@ class HomeView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      'Porque tu tiempo es valioso', // Primera línea
+                      '¡Simplificamos tu vida!', // Nueva primera línea
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(2.0, 2.0),
-                            blurRadius: 4.0,
-                            color: Colors.black45,
-                          ),
-                        ],
+                        
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      'Nosotros lo hacemos por ti',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                        color: themeController.isDarkTheme.value
-                            ? Colors.white
-                            : Colors.black,
-                        shadows: const [
-                          Shadow(
-                            offset: Offset(1.5, 1.5),
-                            blurRadius: 3.0,
-                            color: Colors.black38,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Tu tiempo es nuestra prioridad',
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                           
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon: Obx(() => Icon(
+                            themeController.isDarkTheme.value ? Icons.light_mode : Icons.dark_mode,
+                            color: Colors.blueAccent,
+                          )),
+                          onPressed: () => themeController.toggleTheme(),
+                          iconSize: 30,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -177,7 +154,7 @@ class HomeView extends StatelessWidget {
               color: themeController.isDarkTheme.value
                   ? Colors.white
                   : Colors.black,
-              fontWeight: FontWeight.bold,
+             // fontWeight: FontWeight.bold,
             ),
           ),
         ),
