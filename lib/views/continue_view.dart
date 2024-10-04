@@ -2,13 +2,15 @@
 import 'package:flutter/material.dart';
 
 class ContinueView extends StatelessWidget {
+  const ContinueView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Continuar sin Registrarse'),
+        title: const Text('Continuar sin Registrarse'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Vista para continuar sin registrarse'),
       ),
     );

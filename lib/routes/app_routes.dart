@@ -7,9 +7,9 @@ import '../views/registration_view.dart';
 
 class AppRoutes {
   static final routes = [
-    GetPage(name: '/', page: () => HomeView()),
-    GetPage(name: '/login', page: () => LoginView()),
-    GetPage(name: '/continue', page: () => ContinueView()),
-    GetPage(name: '/registration', page: () => RegistrationView()),
+    GetPage(name: '/', page: () => const HomeView()),
+    GetPage(name: '/login', page: () => const LoginView()),
+    GetPage(name: '/continue', page: () => const ContinueView()),
+    GetPage(name: '/registration', page: () => const RegistrationView()),
   ];
 }

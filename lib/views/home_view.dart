@@ -1,114 +1,199 @@
-// lib/views/home_view.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/theme_controller.dart';
 
+class WaveShape extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue.withOpacity(0.3) // Color con opacidad
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+
+    // Dibujar una forma de onda suave para el estilo bancario
+    path.moveTo(0, size.height);
+    
+    // Primera onda
+    path.quadraticBezierTo(
+      size.width * 0.25, 
+      size.height * 0.8, 
+      size.width * 0.5, 
+      size.height * 0.9
+    );
+    
+    // Segunda onda
+    path.quadraticBezierTo(
+      size.width * 0.75, 
+      size.height, 
+      size.width, 
+      size.height * 0.8
+    );
+    
+    // Cerrar el path
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+    path.close();
+
+    // Añadir un círculo sutil para representar un sol o luna
+    path.addOval(Rect.fromCircle(
+      center: Offset(size.width * 0.8, size.height * 0.2), 
+      radius: size.width * 0.08
+    ));
+
+    // Añadir una línea horizontal para dar profundidad
+    path.moveTo(0, size.height * 0.6);
+    path.lineTo(size.width, size.height * 0.6);
+    
+    
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+
+
 class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.put(ThemeController());
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('¡Relájate!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: () => themeController.toggleTheme(),
-          )
-        ],
-        // Estilos añadidos para el AppBar
-        shape: const Border(
-          bottom: BorderSide(
-            color: Colors.lightBlueAccent, // Color del borde
-            width: 1.0, // Grosor del borde
+      body: Stack(
+        children: [
+          CustomPaint(
+            painter: WaveShape(),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+            ),
           ),
-        ),
-        elevation: themeController.isDarkTheme.value ? 4 : 6, // Sombra del AppBar
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'lib/assets/logo1.png',
-              height: 130,
+          Positioned(
+            top: 40,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(Icons.brightness_6),
+              onPressed: () => themeController.toggleTheme(),
+              iconSize: 30,
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Deja el trabajo duro a nosotros',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  Shadow(
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 3.0,
-                    color: Colors.black45,
-                  ),
-                ],
-              ),
-            ),
-            const Text(
-              'Tú solo relájate y disfruta',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  Shadow(
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 3.0,
-                    color: Colors.black45,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            _buildButton(context, 'Iniciar Sesión', Icons.lock, '/login'),
-            const SizedBox(height: 15),
-            _buildButton(context, 'Continuar sin Registrarse', Icons.input, '/continue'),
-            const SizedBox(height: 15),
-            _buildButton(context, 'Crear Cuenta', Icons.person_add, '/registration'),
-            const SizedBox(height: 30),
-            // Nueva línea divisoria con sombreado
-            Container(
-              width: MediaQuery.of(context).size.width * 0.6, // Ancho de los botones
-              alignment: Alignment.center,
-              
-            ),
-            const SizedBox(height: 10),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, // Menos separación
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('© DyCIT-2024', style: TextStyle(fontSize: 12)),
-                Text('© UATF-2024', style: TextStyle(fontSize: 12)),
+                const SizedBox(height: 50),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Porque tu tiempo es valioso', // Primera línea
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(2.0, 2.0),
+                            blurRadius: 4.0,
+                            color: Colors.black45,
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Nosotros lo hacemos por ti',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: themeController.isDarkTheme.value
+                            ? Colors.white
+                            : Colors.black,
+                        shadows: const [
+                          Shadow(
+                            offset: Offset(1.5, 1.5),
+                            blurRadius: 3.0,
+                            color: Colors.black38,
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Image.asset(
+                  'lib/assets/logo1.png',
+                  height: 140,
+                ),
+                const SizedBox(height: 40),
+                _buildButton(context, 'Iniciar Sesión', Icons.lock, '/login'),
+                const SizedBox(height: 20),
+                _buildButton(context, 'Continuar sin Registrarse', Icons.input,
+                    '/continue'),
+                const SizedBox(height: 20),
+                _buildButton(
+                    context, 'Crear Cuenta', Icons.person_add, '/registration'),
+                const SizedBox(height: 50),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  alignment: Alignment.center,
+                ),
+                const SizedBox(height: 10),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('© DyCIT-2024', style: TextStyle(fontSize: 12)),
+                    Text('© UATF-2024', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildButton(BuildContext context, String text, IconData icon, String route) {
+  Widget _buildButton(
+      BuildContext context, String text, IconData icon, String route) {
     final ThemeController themeController = Get.find<ThemeController>();
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.6,
+      width: MediaQuery.of(context).size.width * 0.7,
       child: ElevatedButton.icon(
         onPressed: () => Get.toNamed(route),
-        icon: Icon(icon, size: 24),
-        label: Text(text),
+        icon: Icon(icon, size: 26),
+        label: Obx(
+          () => Text(
+            text,
+            style: TextStyle(
+              color: themeController.isDarkTheme.value
+                  ? Colors.white
+                  : Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          textStyle: const TextStyle(fontSize: 16),
-          elevation: themeController.isDarkTheme.value ? 6 : 10,
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          textStyle: const TextStyle(fontSize: 18),
+          elevation: themeController.isDarkTheme.value
+              ? 10
+              : 20, // Sombra más profunda en modo claro
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(15),
           ),
           side: const BorderSide(color: Colors.lightBlueAccent, width: 1),
-          shadowColor: themeController.isDarkTheme.value ? Colors.white24 : Colors.black38,
+          shadowColor: themeController.isDarkTheme.value
+              ? Colors.black
+              : Colors.grey, // Sombra más pronunciada
         ),
       ),
     );
