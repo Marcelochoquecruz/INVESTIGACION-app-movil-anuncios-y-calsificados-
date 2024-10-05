@@ -174,9 +174,10 @@ class HomeView extends StatelessWidget {
               ? 10
               : 20, // Sombra más profunda en modo claro
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(15), // Esquinas redondeadas
           ),
-          side: const BorderSide(color: Colors.lightBlueAccent, width: 2),
+          side: const BorderSide(
+              color: Colors.lightBlueAccent, width: 1), // Borde de los botones
           shadowColor: themeController.isDarkTheme.value
               ? Colors.black
               : Colors.grey, // Sombra más pronunciada

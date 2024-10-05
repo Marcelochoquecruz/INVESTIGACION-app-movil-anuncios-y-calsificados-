@@ -31,7 +31,7 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.menu, color: Colors.white),
           itemBuilder: (BuildContext context) {
             return [
-              PopupMenuItem<String>(
+              const PopupMenuItem<String>(
                 value: 'menu',
                 child: MenuOptions(
                     isDrawer: false), // Usamos el widget reutilizable
