@@ -22,14 +22,14 @@ class MenuOptions extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: Icon(Icons.info, color: Colors.blue),
+          leading: const Icon(Icons.info, color: Colors.blue),
           title: const Text('Acerca de Nosotros'),
           onTap: () {
             Get.toNamed('/about');
           },
         ),
         ListTile(
-          leading: Icon(Icons.exit_to_app, color: Colors.red),
+          leading: const Icon(Icons.exit_to_app, color: Colors.red),
           title: const Text('Salir'),
           onTap: () {
             Get.offAllNamed('/');

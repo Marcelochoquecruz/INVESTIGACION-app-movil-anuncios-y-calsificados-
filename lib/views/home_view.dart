@@ -70,34 +70,41 @@ class HomeView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      '¡Simplificamos tu vida!', // Nueva primera línea
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                    Obx(() => Text(
+                          '¡Simplificamos tu vida!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: themeController.isDarkTheme.value
+                                ? Colors.white
+                                : Colors.black,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        )),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Tu tiempo es nuestra prioridad',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                           
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        Obx(() => Text(
+                              'Tu solo registrate en nuestra app.',
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20,
+                                color: themeController.isDarkTheme.value
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            )),
                         const SizedBox(width: 10),
                         IconButton(
                           icon: Obx(() => Icon(
-                            themeController.isDarkTheme.value ? Icons.light_mode : Icons.dark_mode,
-                            color: Colors.blueAccent,
-                          )),
+                                themeController.isDarkTheme.value
+                                    ? Icons.light_mode
+                                    : Icons.dark_mode,
+                                color: Colors.blueAccent,
+                              )),
                           onPressed: () => themeController.toggleTheme(),
                           iconSize: 30,
                         ),
@@ -154,7 +161,9 @@ class HomeView extends StatelessWidget {
               color: themeController.isDarkTheme.value
                   ? Colors.white
                   : Colors.black,
-             // fontWeight: FontWeight.bold,
+              fontWeight: themeController.isDarkTheme.value
+                  ? FontWeight.normal
+                  : FontWeight.bold,
             ),
           ),
         ),
@@ -167,7 +176,7 @@ class HomeView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          side: const BorderSide(color: Colors.lightBlueAccent, width: 1),
+          side: const BorderSide(color: Colors.lightBlueAccent, width: 2),
           shadowColor: themeController.isDarkTheme.value
               ? Colors.black
               : Colors.grey, // Sombra más pronunciada

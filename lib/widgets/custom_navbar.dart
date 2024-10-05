@@ -1,3 +1,4 @@
+import 'package:anuncios_domicilio/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'menu_options.dart';
@@ -19,7 +20,7 @@ class CustomNavBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
-          Get.back();
+          Get.to(() => const HomeView());
         },
       ),
       actions: [

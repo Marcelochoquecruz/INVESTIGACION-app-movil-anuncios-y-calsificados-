@@ -10,7 +10,7 @@ class AppRoutes {
   static final routes = [
     GetPage(name: '/', page: () => const HomeView()),
     GetPage(name: '/login', page: () => const LoginView()),
-    GetPage(name: '/continue', page: () => const ContinueView()),
+    GetPage(name: '/continue', page: () =>  ContinueView()),
     GetPage(name: '/registration', page: () => const RegistrationView()),
     GetPage(name: '/about', page: () => const AboutView()),
   ];
