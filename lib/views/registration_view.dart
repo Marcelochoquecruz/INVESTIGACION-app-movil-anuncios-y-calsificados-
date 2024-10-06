@@ -120,7 +120,7 @@ class _RegistrationViewState extends State<RegistrationView> {
       obscureText: !isVisible,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(Icons.lock, color: AppColors.blueAccent), // Icono de candado
+        prefixIcon: const Icon(Icons.lock, color: AppColors.blueAccent), // Icono de candado
         suffixIcon: IconButton(
           icon: Icon(
             isVisible ? Icons.visibility : Icons.visibility_off,

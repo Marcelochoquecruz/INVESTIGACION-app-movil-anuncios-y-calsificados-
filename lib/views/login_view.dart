@@ -1,4 +1,6 @@
+import 'package:anuncios_domicilio/views/main_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../widgets/custom_navbar.dart';
 
 class AppColors {
@@ -63,7 +65,7 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Implementar lógica de inicio de sesión
+                  Get.to(() => const MainView());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 44, 49, 59),

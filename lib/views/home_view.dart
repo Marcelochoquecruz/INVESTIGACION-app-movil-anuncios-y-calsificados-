@@ -114,10 +114,10 @@ class HomeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Image.asset(
-                  'lib/assets/logo1.png',
-                  height: 140,
+                  'lib/assets/logo.png',
+                  height: 160,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 _buildButton(context, 'Iniciar Sesión', Icons.lock, '/login'),
                 const SizedBox(height: 20),
                 _buildButton(context, 'Continuar sin Registrarse', Icons.input,
