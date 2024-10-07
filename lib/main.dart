@@ -1,13 +1,20 @@
 // lib/main.dart
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/theme_controller.dart';
 import 'routes/app_routes.dart';
+// Asegúrate de que este archivo esté configurado correctamente.
+import 'firebase_options.dart'; 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp( MyApp());
 }
-
 class MyApp extends StatelessWidget {
   final ThemeController themeController = ThemeController();
 
