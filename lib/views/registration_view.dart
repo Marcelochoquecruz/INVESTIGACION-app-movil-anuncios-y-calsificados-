@@ -43,7 +43,7 @@ class _RegistrationViewState extends State<RegistrationView> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor:  Colors.black,
+        backgroundColor: Colors.black, // Color del fondo del mensaje de error
         duration: const Duration(seconds: 3),
       ),
     );
@@ -53,22 +53,26 @@ class _RegistrationViewState extends State<RegistrationView> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.green, // Color del fondo del mensaje de éxito
         duration: const Duration(seconds: 3),
       ),
     );
   }
 
+  // Color del texto de los campos de texto
   Color getTextFieldColor() {
-    return Colors.white;
+    return Colors.white; // Color del fondo del campo de texto
   }
 
+  // Color del botón de registro
   Color getButtonColor() {
-    return Colors.deepPurple;
+    return Colors.deepPurple; // Color del botón de registro
   }
 
+  // Color del borde de los campos de texto
   Color getInputBorderColor() {
-    return Colors.deepPurple.withOpacity(0.5);
+    return Colors.deepPurple
+        .withOpacity(0.5); // Color del borde de los campos de texto
   }
 
   @override
@@ -100,17 +104,19 @@ class _RegistrationViewState extends State<RegistrationView> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: Colors.black,
+                        color: Colors.black45,
                         spreadRadius: 2,
                         blurRadius: 8,
-                        offset: const Offset(0, 4),
+                        offset: Offset(0, 4),
                       ),
                     ],
                   ),
                   child: TextFormField(
                     controller: _emailController,
+                    style: const TextStyle(
+                        color: Colors.deepPurple), // Color del texto
                     decoration: InputDecoration(
                       labelText: 'Correo',
                       prefixIcon: const Icon(Icons.email, color: Colors.blue),
@@ -130,7 +136,8 @@ class _RegistrationViewState extends State<RegistrationView> {
                             BorderSide(color: getInputBorderColor(), width: 2),
                       ),
                       filled: true,
-                      fillColor: getTextFieldColor(),
+                      fillColor:
+                          getTextFieldColor(), // Color del fondo del campo de texto
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -146,18 +153,20 @@ class _RegistrationViewState extends State<RegistrationView> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.grey,
                         spreadRadius: 2,
                         blurRadius: 8,
-                        offset: const Offset(0, 4),
+                        offset: Offset(0, 4),
                       ),
                     ],
                   ),
                   child: TextFormField(
                     controller: _passwordController,
                     obscureText: _obscureText,
+                    style: const TextStyle(
+                        color: Colors.deepPurple), // Color del texto
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
                       prefixIcon: const Icon(Icons.lock, color: Colors.blue),
@@ -206,18 +215,20 @@ class _RegistrationViewState extends State<RegistrationView> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: Colors.black12,
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
+                        color: Colors.black45, // Sombra más profunda
+                        spreadRadius: 4,
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
                       ),
                     ],
                   ),
                   child: TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: _obscureText,
+                    style: const TextStyle(
+                        color: Colors.deepPurple), // Color del texto
                     decoration: InputDecoration(
                       labelText: 'Confirmar contraseña',
                       prefixIcon:
@@ -281,16 +292,121 @@ class _RegistrationViewState extends State<RegistrationView> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: getButtonColor(),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                          horizontal: 40, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      minimumSize: const Size(double.infinity, 50),
                     ),
                     child: const Text(
-                      'Crear cuenta',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      'Crear Cuenta',
+                      style: TextStyle(
+                        color: Colors.white, // Color del texto del botón
+                        fontSize: 18,
+                      ),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 40),
+
+                // Botón de Google
+                GestureDetector(
+                  onTap: () {
+                    // Aquí puedes implementar la lógica para iniciar sesión con Google
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white, // Color de fondo del botón
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black45,
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'lib/assets/google.png',
+                            height: 30,
+                            width: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Iniciar con Google',
+                            style: TextStyle(
+                              color: Colors.black, // Color del texto
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Botón de Facebook
+                GestureDetector(
+                  onTap: () {
+                    // Aquí puedes implementar la lógica para iniciar sesión con Facebook
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.blue[800], // Color de fondo del botón
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black45,
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'lib/assets/facebook.png', // Asegúrate de que la ruta sea correcta
+                            height: 30,
+                            width: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Iniciar con Facebook',
+                            style: TextStyle(
+                              color: Colors.white, // Color del texto
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Texto de enlace para iniciar sesión
+                GestureDetector(
+                  onTap: () {
+                    Get.offNamed(
+                        '/login'); // Redirigir a la vista de inicio de sesión
+                  },
+                  child: const Text(
+                    '¿Ya tienes una cuenta? Inicia sesión',
+                    style: TextStyle(color: Colors.deepPurple, fontSize: 16),
                   ),
                 ),
               ],
@@ -299,13 +415,5 @@ class _RegistrationViewState extends State<RegistrationView> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
   }
 }

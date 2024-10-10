@@ -2,7 +2,6 @@ import 'package:anuncios_domicilio/views/main_view.dart';
 import 'package:anuncios_domicilio/widgets/custom_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginView extends StatefulWidget {
