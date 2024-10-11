@@ -11,8 +11,8 @@ class WaveShape extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = isShadow
-          ? Colors.black.withOpacity(0.5) // Color del borde sombreado
-          : Colors.white.withOpacity(0.8) // Color de la figura interna
+          ? Colors.green.withOpacity(0.9) // Color del borde sombreado
+          : Colors.white.withOpacity(0.9) // Color de la figura interna
       ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView>
           // Fondo sin degradado
           color: themeController.isDarkTheme.value
               ? Colors.grey.shade900 // Color de fondo para tema oscuro
-              : const Color.fromARGB(255, 197, 230, 231), // Color de fondo para tema claro
+              : Colors.black87, // Color de fondo para tema claro
           child: Stack(
             children: [
               // Sombra externa
@@ -108,16 +108,15 @@ class _HomeViewState extends State<HomeView>
                       'Tu Hogar, nuestro compromiso.',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 25,
                         color: themeController.isDarkTheme.value
                             ? Colors.black // Texto oscuro en tema oscuro
-                            : const Color.fromARGB(
-                                255, 33, 33, 33), // Texto oscuro en tema claro
+                            : Colors.deepPurple, // Texto oscuro en tema claro
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(
-                        height: 30), // Aumentamos el espacio superior
+                        height: 10), // Aumentamos el espacio superior
                     // Icono del sol/luna con textos "Día" y "Noche"
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +153,7 @@ class _HomeViewState extends State<HomeView>
                       ],
                     ),
                     const SizedBox(
-                        height: 20), // Espacio entre el icono y el logo
+                        height: 10), // Espacio entre el icono y el logo
                     // Logo de la app
                     Image.asset(
                       'lib/assets/logo.png',
@@ -169,7 +168,7 @@ class _HomeViewState extends State<HomeView>
                     const SizedBox(height: 30),
                     _buildButton(context, 'Crear Cuenta', Icons.person_add,
                         '/registration'),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 90),
                     // Pie de página
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -180,7 +179,7 @@ class _HomeViewState extends State<HomeView>
                             fontSize: 13,
                             color: themeController.isDarkTheme.value
                                 ? Colors.white
-                                : Colors.black,
+                                : Colors.lightGreen,
                           ),
                         ),
                         Text(
@@ -189,7 +188,7 @@ class _HomeViewState extends State<HomeView>
                             fontSize: 13,
                             color: themeController.isDarkTheme.value
                                 ? Colors.white
-                                : Colors.black,
+                                : Colors.lightGreen,
                           ),
                         ),
                       ],

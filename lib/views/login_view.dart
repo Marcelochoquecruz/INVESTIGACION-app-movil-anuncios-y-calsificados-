@@ -104,249 +104,152 @@ class _LoginViewState extends State<LoginView> {
                   child: const Text(
                     'Ingresa tus datos',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.deepPurple,
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 // Campo de correo
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Correo',
-                      prefixIcon:
-                          const Icon(Icons.email, color: Colors.deepPurple),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.deepPurple, width: 2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                            color: Colors.deepPurple.withOpacity(0.5),
-                            width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.deepPurple, width: 2),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Correo',
+                    labelStyle:
+                        const TextStyle(fontSize: 16, color: Colors.deepPurple),
+                    prefixIcon:
+                        const Icon(Icons.email, color: Colors.deepPurple),
+                    border: InputBorder.none, // Sin borde
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.deepPurple, width: 2),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa un correo válido';
-                      }
-                      return null;
-                    },
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.deepPurple.withOpacity(0.5), width: 2),
+                    ),
+                    filled: false,
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa un correo válido';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
                 // Campo de contraseña
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    labelStyle:
+                        const TextStyle(fontSize: 16, color: Colors.deepPurple),
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Colors.deepPurple),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.deepPurple,
                       ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      prefixIcon:
-                          const Icon(Icons.lock, color: Colors.deepPurple),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.deepPurple, width: 2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                            color: Colors.deepPurple.withOpacity(0.5),
-                            width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Colors.deepPurple, width: 2),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa una contraseña';
-                      }
-                      return null;
-                    },
+                    border: InputBorder.none, // Sin borde
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Colors.deepPurple, width: 2),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.deepPurple.withOpacity(0.5), width: 2),
+                    ),
+                    filled: false,
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa una contraseña';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40),
                 // Botón para iniciar sesión
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                ElevatedButton(
+                  onPressed: _login,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.deepPurple,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 0,
+                    minimumSize: const Size(double.infinity, 50),
                   ),
-                  child: ElevatedButton(
-                    onPressed: _login,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurple,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 0,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: const Text(
-                      'Iniciar sesión',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                  child: const Text(
+                    'Iniciar sesión',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 24),
                 // Botón para continuar con Google
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton.icon(
-                    onPressed: _signInWithGoogle,
-                    icon: Image.asset('lib/assets/google.png', height: 24),
-                    label: const Text('Continuar con Google'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 0,
-                      minimumSize: const Size(double.infinity, 50),
+                ElevatedButton.icon(
+                  onPressed: _signInWithGoogle,
+                  icon: Image.asset('lib/assets/google.png', height: 24),
+                  label: const Text('Continuar con Google'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
+                    elevation: 0,
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 // Botón para continuar con Facebook
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ElevatedButton.icon(
-                    onPressed: _signInWithFacebook,
-                    icon: Image.asset('lib/assets/facebook.png', height: 24),
-                    label: const Text('Continuar con Facebook'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 0,
-                      minimumSize: const Size(double.infinity, 50),
+                ElevatedButton.icon(
+                  onPressed: _signInWithFacebook,
+                  icon: Image.asset('lib/assets/facebook.png', height: 24),
+                  label: const Text('Continuar con Facebook'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
+                    elevation: 0,
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
-                const SizedBox(height: 32),
-                // Botón para recuperar contraseña
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.deepPurple.withOpacity(0.3),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      print('Recuperar contraseña');
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      backgroundColor: Colors.white,
+                const SizedBox(height: 12),
+                // Botón para continuar con GitHub
+                ElevatedButton.icon(
+                  onPressed: _signInWithGitHub,
+                  icon: const Icon(Icons.code, color: Colors.white),
+                  label: const Text('Continuar con GitHub'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    child: const Text(
-                      '¿Olvidaste tu contraseña?',
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    elevation: 0,
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
               ],
