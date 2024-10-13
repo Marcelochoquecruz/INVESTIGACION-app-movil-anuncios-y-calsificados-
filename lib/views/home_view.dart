@@ -10,21 +10,38 @@ class WaveShape extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isShadow
-          ? Colors.green.withOpacity(0.9) // Color del borde sombreado
-          : Colors.white.withOpacity(0.9) // Color de la figura interna
+      ..shader = isShadow
+          ? const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color.fromARGB(255, 45, 14, 87), Color.fromARGB(255, 9, 2, 41)],
+            ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
+          : const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color.fromARGB(115, 172, 134, 238), Color.fromARGB(255, 243, 243, 247)],
+            ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
       ..style = PaintingStyle.fill;
 
     final path = Path();
 
-    // Dibujo de la curva
+    // Dibujo de la curva de izquierda a derecha
+    // Inicio en el punto (0, tamaño de la altura)
     path.moveTo(0, size.height);
-    path.quadraticBezierTo(size.width * 0.25, size.height * 0.8,
+    // Curva cuadrática pasando por el punto (ancho del tamaño * 0.25, altura del tamaño * 0.8)
+    path.quadraticBezierTo(size.width * 0.100, size.height * 0.8,
+        // Curva cuadrática pasando por el punto (ancho del tamaño * 0.5, altura del tamaño * 0.9)
         size.width * 0.5, size.height * 0.9);
+    // Curva cuadrática pasando por el punto (ancho del tamaño * 0.75, tamaño de la altura)
     path.quadraticBezierTo(
-        size.width * 0.75, size.height, size.width, size.height * 0.8);
+        size.width * 0.75, size.height, 
+        // Línea recta al punto (ancho del tamaño, altura del tamaño * 0.8)
+        size.width, size.height * 0.8);
+    // Línea recta al punto (ancho del tamaño, 0)
     path.lineTo(size.width, 0);
+    // Línea recta al punto (0, 0)
     path.lineTo(0, 0);
+    // Cierre del camino
     path.close();
 
     // Dibujo en el lienzo
@@ -76,10 +93,16 @@ class _HomeViewState extends State<HomeView>
     return Scaffold(
       body: Obx(
         () => Container(
-          // Fondo sin degradado
-          color: themeController.isDarkTheme.value
-              ? Colors.grey.shade900 // Color de fondo para tema oscuro
-              : Colors.black87, // Color de fondo para tema claro
+          // Fondo con degradado
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: themeController.isDarkTheme.value
+                  ? [const Color.fromARGB(255, 2, 1, 19), const Color.fromARGB(255, 18, 18, 19)] // Degradado para tema oscuro
+                  : [const Color.fromARGB(255, 24, 7, 1), const Color.fromARGB(255, 112, 112, 226)], // Degradado para tema claro
+            ),
+          ),
           child: Stack(
             children: [
               // Sombra externa
@@ -102,16 +125,17 @@ class _HomeViewState extends State<HomeView>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 35),
+                    const SizedBox(height: 10),
                     // Eslogan de la app
                     Text(
-                      'Tu Hogar, nuestro compromiso.',
+                      'Tu Hogar\n Nuestro compromiso',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 20,
                         color: themeController.isDarkTheme.value
-                            ? Colors.black // Texto oscuro en tema oscuro
-                            : Colors.deepPurple, // Texto oscuro en tema claro
+                            ? Colors.white// Texto azul oscuro en tema oscuro
+                            : Colors.white, // Texto oscuro en tema claro
+                        fontStyle: FontStyle.italic, // Estilo de letra cursiva
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -130,8 +154,8 @@ class _HomeViewState extends State<HomeView>
                                       .dark_mode // Otra luna para tema oscuro
                                   : Icons.wb_sunny, // Sol para tema claro
                               color: themeController.isDarkTheme.value
-                                  ? Colors.blue
-                                  : Colors.blueGrey,
+                                  ? Colors.black
+                                  : Colors.black,
                             ),
                             onPressed: () => themeController.toggleTheme(),
                             iconSize: 25, // Tamaño del icono más grande
@@ -143,10 +167,10 @@ class _HomeViewState extends State<HomeView>
                               ? '¡De noche!'
                               : '¡De día!', // Cambia el texto
                           style: TextStyle(
-                            fontSize: 15, // Tamaño más grande del texto
+                            fontSize: 10, // Tamaño más grande del texto
                             color: themeController.isDarkTheme.value
                                 ? Colors.black87
-                                : Colors.black87,
+                                : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -168,31 +192,9 @@ class _HomeViewState extends State<HomeView>
                     const SizedBox(height: 30),
                     _buildButton(context, 'Crear Cuenta', Icons.person_add,
                         '/registration'),
-                    const SizedBox(height: 90),
+                    const SizedBox(height: 110),
                     // Pie de página
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          '© DyCIT-2024',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: themeController.isDarkTheme.value
-                                ? Colors.white
-                                : Colors.lightGreen,
-                          ),
-                        ),
-                        Text(
-                          '© UATF-2024',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: themeController.isDarkTheme.value
-                                ? Colors.white
-                                : Colors.lightGreen,
-                          ),
-                        ),
-                      ],
-                    ),
+                    _buildFooter(themeController), // Reemplazado por el nuevo widget
                   ],
                 ),
               ),
@@ -217,7 +219,7 @@ class _HomeViewState extends State<HomeView>
             style: TextStyle(
               color: themeController.isDarkTheme.value
                   ? Colors.white
-                  : Colors.black,
+                  : Colors.black, // Esteo es para cambiar el color de los textos botones
               
             ),
           ),
@@ -237,6 +239,21 @@ class _HomeViewState extends State<HomeView>
               themeController.isDarkTheme.value ? Colors.black : Colors.grey,
         ),
       ),
+    );
+  }
+
+  Widget _buildFooter(ThemeController themeController) {
+    final footerTextStyle = TextStyle(
+      fontSize: 10,
+      color: themeController.isDarkTheme.value ? Colors.white : Colors.black,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('© DyCIT-2024', style: footerTextStyle),
+        Text('© UATF-2024', style: footerTextStyle),
+      ],
     );
   }
 }

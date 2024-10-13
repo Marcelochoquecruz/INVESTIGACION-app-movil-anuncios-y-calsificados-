@@ -17,6 +17,13 @@ class _RegistrationViewState extends State<RegistrationView> {
   final _confirmPasswordController = TextEditingController();
   bool _obscureText = true;
 
+  // Lista de colores claros para los íconos
+  final List<Color> _iconColors = [
+    Colors.white70, // Color para el correo
+    Colors.white70, // Color para la contraseña
+    Colors.white70, // Color para la confirmación de contraseña
+  ];
+
   // Función para registrar un usuario
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
@@ -42,9 +49,17 @@ class _RegistrationViewState extends State<RegistrationView> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Padding(
+          padding: const EdgeInsets.all(16.0), // Aumenta la altura
+          child: Text(
+            message,
+            style: const TextStyle(
+                fontSize: 18, color: Colors.white), // Tamaño de texto grande
+          ),
+        ),
         backgroundColor: Colors.black,
         duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating, // Hace que el SnackBar flote
       ),
     );
   }
@@ -52,9 +67,17 @@ class _RegistrationViewState extends State<RegistrationView> {
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Padding(
+          padding: const EdgeInsets.all(16.0), // Aumenta la altura
+          child: Text(
+            message,
+            style: const TextStyle(
+                fontSize: 18, color: Colors.white), // Tamaño de texto grande
+          ),
+        ),
         backgroundColor: Colors.green,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating, // Hace que el SnackBar flote
       ),
     );
   }
@@ -69,18 +92,8 @@ class _RegistrationViewState extends State<RegistrationView> {
   // Función para obtener el color dinámicamente según el tema
   Color _getTextColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark
-        ? Colors.black
-        : Colors.black; // Cambiado a black
-  }
-
-  // Función para obtener el color de las sombras
-  BoxShadow _getBoxShadow() {
-    return BoxShadow(
-      color: Colors.white70,
-      spreadRadius: 2,
-      blurRadius: 5,
-      offset: const Offset(0, 3),
-    );
+        ? Colors.white // Cambiado a white para el tema oscuro
+        : Colors.black; // Color negro para el tema claro
   }
 
   @override
@@ -98,132 +111,111 @@ class _RegistrationViewState extends State<RegistrationView> {
                 const SizedBox(height: 20),
 
                 // Campo de correo electrónico
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [_getBoxShadow()],
+                TextFormField(
+                  controller: _emailController,
+                  style: TextStyle(color: _getTextColor(context)),
+                  decoration: InputDecoration(
+                    labelText: 'Correo',
+                    labelStyle: TextStyle(color: _getTextColor(context)),
+                    prefixIcon: const Icon(Icons.email,
+                        color: Colors.blue), // Color del ícono
+                    enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
+                    focusedBorder:
+                        _buildUnderlineBorder(Colors.deepPurpleAccent),
                   ),
-                  child: TextFormField(
-                    controller: _emailController,
-                    style: TextStyle(color: _getTextColor(context)),
-                    decoration: InputDecoration(
-                      labelText: 'Correo',
-                      labelStyle: TextStyle(color: _getTextColor(context)),
-                      prefixIcon: Icon(Icons.email, color: Colors.blue),
-                      enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
-                      focusedBorder:
-                          _buildUnderlineBorder(Colors.deepPurpleAccent),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa un correo válido';
-                      }
-                      return null;
-                    },
-                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa un correo válido';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
 
                 // Campo de contraseña
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [_getBoxShadow()],
-                  ),
-                  child: TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscureText,
-                    style: TextStyle(color: _getTextColor(context)),
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      labelStyle: TextStyle(color: _getTextColor(context)),
-                      prefixIcon: Icon(Icons.lock, color: Colors.blue),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: _obscureText,
+                  style: TextStyle(color: _getTextColor(context)),
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    labelStyle: TextStyle(color: _getTextColor(context)),
+                    prefixIcon: const Icon(Icons.lock,
+                        color: Colors.lightBlue), // Color del ícono
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.white70,
                       ),
-                      enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
-                      focusedBorder:
-                          _buildUnderlineBorder(Colors.deepPurpleAccent),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingresa una contraseña';
-                      }
-                      return null;
-                    },
+                    enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
+                    focusedBorder:
+                        _buildUnderlineBorder(Colors.deepPurpleAccent),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa una contraseña';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
 
                 // Campo de confirmación de contraseña
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [_getBoxShadow()],
-                  ),
-                  child: TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: _obscureText,
-                    style: TextStyle(color: _getTextColor(context)),
-                    decoration: InputDecoration(
-                      labelText: 'Confirmar contraseña',
-                      labelStyle: TextStyle(color: _getTextColor(context)),
-                      prefixIcon: Icon(Icons.lock_outline, color: Colors.blue),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: _obscureText,
+                  style: TextStyle(color: _getTextColor(context)),
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar contraseña',
+                    labelStyle: TextStyle(color: _getTextColor(context)),
+                    prefixIcon: const Icon(Icons.lock_outline,
+                        color: Colors.lightGreen), // Color del ícono
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.white70,
                       ),
-                      enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
-                      focusedBorder:
-                          _buildUnderlineBorder(Colors.deepPurpleAccent),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor confirma tu contraseña';
-                      }
-                      return null;
-                    },
+                    enabledBorder: _buildUnderlineBorder(Colors.deepPurple),
+                    focusedBorder:
+                        _buildUnderlineBorder(Colors.deepPurpleAccent),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor confirma tu contraseña';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40),
 
                 // Botón de Crear Cuenta
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [_getBoxShadow()],
-                  ),
-                  child: ElevatedButton(
-                    onPressed: _register,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                ElevatedButton(
+                  onPressed: _register,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    child: const Text(
-                      'Crear Cuenta',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
+                  ),
+                  child: const Text(
+                    'Crear Cuenta',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -234,10 +226,9 @@ class _RegistrationViewState extends State<RegistrationView> {
                   onTap: () {
                     Get.offNamed('/login');
                   },
-                  child: Text(
+                  child: const Text(
                     '¿Ya tienes una cuenta? Inicia sesión',
-                    style:
-                        TextStyle(color: Colors.deepPurple, fontSize: 16),
+                    style: TextStyle(color: Colors.deepPurple, fontSize: 16),
                   ),
                 ),
                 const SizedBox(height: 20),

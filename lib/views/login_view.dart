@@ -180,22 +180,26 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 40),
                 // Botón para iniciar sesión
-                ElevatedButton(
+                TextButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: Colors.deepPurple, // Azul marino oscuro
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(
+                        color: Colors.blue, // Color del borde
+                        width: 1, // Ancho del borde
+                      ),
                     ),
-                    elevation: 0,
+                    elevation: 5, // Sombra
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: const Text(
                     'Iniciar sesión',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -211,8 +215,12 @@ class _LoginViewState extends State<LoginView> {
                         horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(
+                        color: Colors.grey, // Color del borde
+                        width: 1, // Ancho del borde
+                      ),
                     ),
-                    elevation: 0,
+                    elevation: 5, // Sombra
                     minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
@@ -223,35 +231,48 @@ class _LoginViewState extends State<LoginView> {
                   icon: Image.asset('lib/assets/facebook.png', height: 24),
                   label: const Text('Continuar con Facebook'),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(
+                        color: Colors.blue, // Color del borde
+                        width: 1, // Ancho del borde
+                      ),
                     ),
-                    elevation: 0,
+                    elevation: 5, // Sombra
                     minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Botón para continuar con GitHub
-                ElevatedButton.icon(
-                  onPressed: _signInWithGitHub,
-                  icon: const Icon(Icons.code, color: Colors.white),
-                  label: const Text('Continuar con GitHub'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
+                // Botón para continuar con GitHub (eliminado)
+                // En su lugar, botón para "Olvidaste tu contraseña"
+                TextButton(
+                  onPressed: () {
+                    // Acción cuando el usuario presiona el botón
+                   
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.deepPurple,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
+                      
                     ),
                     elevation: 0,
-                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: const Text(
+                    'Olvidaste tu contraseña?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
+                const SizedBox(height: 12),
               ],
             ),
           ),
