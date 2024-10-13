@@ -1,5 +1,6 @@
-// lib/views/profile_view.dart
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // Asegúrate de importar Get
+
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
@@ -28,6 +29,14 @@ class ProfileView extends StatelessWidget {
                 // Lógica para ver historial
               },
               child: const Text('Ver Historial de Anuncios'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Navegar a la vista de radio
+                Get.toNamed('/radio');
+              },
+              child: const Text('Escuchar Radio Collasuyo'), // Nuevo botón
             ),
           ],
         ),

@@ -9,6 +9,7 @@ import '../views/profile_view.dart';
 import '../views/announcement_view.dart';
 import '../views/chat_view.dart';
 import '../views/main_view.dart'; // Vista principal
+import '../views/radio_view.dart'; // Nueva vista de Radio
 
 class AppRoutes {
   static final routes = [
@@ -31,5 +32,7 @@ class AppRoutes {
         name: '/main',
         page: () =>
             const MainView()), // Ruta para la vista principal con NavigationBar
+    GetPage(
+        name: '/radio', page: () => const RadioView()), // Nueva ruta para Radio
   ];
 }
