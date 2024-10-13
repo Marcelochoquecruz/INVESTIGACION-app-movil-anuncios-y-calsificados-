@@ -99,8 +99,11 @@ class _HomeViewState extends State<HomeView>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: themeController.isDarkTheme.value
-                  ? [const Color.fromARGB(255, 2, 1, 19), const Color.fromARGB(255, 18, 18, 19)] // Degradado para tema oscuro
-                  : [const Color.fromARGB(255, 24, 7, 1), const Color.fromARGB(255, 112, 112, 226)], // Degradado para tema claro
+                  ? [Colors.deepPurple[700]!, Colors.deepPurple[300]!] // Degradado para tema oscuro
+                  : [
+                      Colors.deepPurple[700]!,
+                      Colors.deepPurple[300]!
+                    ], // Degradado para tema claro
             ),
           ),
           child: Stack(

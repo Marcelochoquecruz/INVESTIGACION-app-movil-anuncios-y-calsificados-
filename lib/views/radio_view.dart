@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class RadioView extends StatefulWidget {
-  const RadioView({Key? key}) : super(key: key);
+  const RadioView({super.key});
 
   @override
   _RadioViewState createState() => _RadioViewState();
@@ -63,16 +63,6 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Radio Collasuyo', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Colors.deepPurple[800],
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Aquí iría la lógica para regresar
-          },
-        ),
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -89,17 +79,16 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                 'Programa Cambalache',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              const SizedBox(height: 10),
+             
               const Text(
-                'Potosí, Bolivia',
-                style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.white70),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Horario: Lunes a Viernes, 07:00 - 12:00 \n Del medio dia, no te lo pierdas!!!',
+                'Horario: Lunes a Viernes, 07:00 - 12:00',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
-              SizedBox(height: 40),
+              const Text(
+                'Del medio dia, no te lo pierdas!!!',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              const SizedBox(height: 10),
               AnimatedBuilder(
                 animation: _animationController,
                 builder: (_, child) {
@@ -108,13 +97,13 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                     child: child,
                   );
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.radio,
                   size: 120,
                   color: Colors.deepPurple,
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -122,8 +111,8 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                     onPressed: _togglePlay,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(20),
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(20),
                       elevation: 10,
                     ),
                     child: Icon(
@@ -132,16 +121,16 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                       color: Colors.deepPurple[800],
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _stopPlayback,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(20),
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(20),
                       elevation: 10,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       FontAwesomeIcons.stop,
                       size: 30,
                       color: Colors.white,
@@ -149,10 +138,10 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 'Volumen: ${(_volume * 100).toInt()}%',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
               Slider(
                 value: _volume,
@@ -162,10 +151,17 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
                 activeColor: Colors.black,
                 inactiveColor: Colors.grey[400],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Hora y Fecha: ${DateFormat('HH:mm dd/MM/yyyy').format(DateTime.now())}',
-                style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Potosí, Bolivia',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white70),
               ),
             ],
           ),

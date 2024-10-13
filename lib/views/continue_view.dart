@@ -1,54 +1,38 @@
+import 'package:anuncios_domicilio/views/ultimos_anuncios_view.dart';
+import 'package:anuncios_domicilio/widgets/custom_navbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../widgets/custom_navbar.dart';
 import '../views/home_view.dart';
+import '../views/radio_view.dart'; // Importa la vista de Radio
 
-class ContinueView extends StatelessWidget {
-  final List<Map<String, dynamic>> servicios = [
-    {
-      'icon': Icons.electrical_services,
-      'label': 'Electricidad',
-      'color': Colors.red,
-    },
-    {
-      'icon': Icons.format_paint,
-      'label': 'Pintura',
-      'color': Colors.purple,
-    },
-    {
-      'icon': Icons.carpenter,
-      'label': 'Carpintería',
-      'color': Colors.brown,
-    },
-    {
-      'icon': Icons.cleaning_services,
-      'label': 'Limpieza',
-      'color': Colors.blue,
-    },
-    {
-      'icon': Icons.nature,
-      'label': 'Jardinería',
-      'color': Colors.green,
-    },
-    {
-      'icon': Icons.local_shipping,
-      'label': 'Transporte',
-      'color': Colors.orange,
-    },
-    {
-      'icon': Icons.home_repair_service,
-      'label': 'Reparaciones',
-      'color': Colors.teal,
-    },
-    {
-      'icon': Icons.plumbing,
-      'label': 'Plomería',
-      'color': Colors.black,
-    },
+class ContinueView extends StatefulWidget {
+  const ContinueView({super.key});
+
+  @override
+  _ContinueViewState createState() => _ContinueViewState();
+}
+
+class _ContinueViewState extends State<ContinueView> {
+  int _selectedIndex = 0; // Índice seleccionado del BottomNavigationBar
+
+  final List<Widget> _views = [
+    const UltimosAnunciosView(), // Pantalla de Inicio
+    Center(child: Text('Perfil')), // Placeholder para Perfil
+    Center(child: Text('Chat')), // Placeholder para Chat
+    const RadioView(), // Vista de Radio
+    Center(child: Text('Cerrar Sesión')), // Placeholder para Logout
   ];
 
-  ContinueView({super.key});
+  void _onItemTapped(int index) {
+    if (index == 1 || index == 2) {
+      _showSnackbar('Necesita registrarse', 'Por favor, registrese primero.');
+      return;
+    }
+    setState(() {
+      _selectedIndex = index; // Actualiza el índice seleccionado
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,23 +41,15 @@ class ContinueView extends StatelessWidget {
         title: "Nuestros Anuncios y Clasificados",
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          _buildCarousel(),
-          const SizedBox(height: 20),
-          const Text(
-            'Últimas Publicaciones',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Expanded(child: _buildAnunciosList()),
-        ],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _views,
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(context),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  Widget _buildCarousel() {
+  Widget _buildCarousel(dynamic servicios) {
     return Container(
       color: Colors.blue.shade50,
       height: 120,
@@ -147,23 +123,21 @@ class ContinueView extends StatelessWidget {
         'title': 'SE VENDE LOTE DE TERRENO',
         'date': '4 oct 2024, 11:06:07',
         'description':
-            'Se ofrece a la venta un lote de terreno ubicado por el Hospital de Tercer Nivel. Referencias al 79440370',
+            'Se ofrece a la venta un lote de terreno cerca del hospital.',
         'icon': Icons.phone,
         'iconColor': Colors.green,
       },
       {
         'title': 'SE REQUIERE AYUDANTE DE CONSTRUCCIÓN',
         'date': '4 oct 2024, 11:04:07',
-        'description':
-            'Se requiere ayudante de construcción. Referencias al 68746145',
+        'description': 'Se busca ayudante con experiencia. Llamar al 68746145.',
         'icon': Icons.message,
         'iconColor': Colors.blue,
       },
       {
         'title': 'SE VENDE AUTO USADO',
         'date': '4 oct 2024, 12:00:00',
-        'description':
-            'Vendo auto usado en buenas condiciones. Referencias al 123456789.',
+        'description': 'Auto usado en buen estado. Interesados: 123456789.',
         'icon': Icons.directions_car,
         'iconColor': Colors.red,
       },
@@ -171,7 +145,7 @@ class ContinueView extends StatelessWidget {
         'title': 'SE ALQUILA OFICINA',
         'date': '4 oct 2024, 12:30:00',
         'description':
-            'Se alquila oficina en el centro de la ciudad. Interesados llamar al 987654321.',
+            'Oficina en el centro de la ciudad. Contacto: 987654321.',
         'icon': Icons.business,
         'iconColor': Colors.orange,
       },
@@ -194,21 +168,15 @@ class ContinueView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        anuncio['title'],
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+                      Text(anuncio['title'],
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text(
-                        anuncio['date'],
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
+                      Text(anuncio['date'],
+                          style: TextStyle(color: Colors.grey.shade600)),
                       const SizedBox(height: 4),
-                      Text(
-                        anuncio['description'],
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                      Text(anuncio['description'],
+                          style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                 ),
@@ -220,33 +188,21 @@ class ContinueView extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.grey, width: 1.0),
-        ),
-      ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.logout), label: 'Cerrar Sesión'),
-        ],
-        onTap: (index) {
-          if (index == 3) {
-            Get.off(() => const HomeView());
-          } else if (index == 1 || index == 2) {
-            _showSnackbar(
-                'Necesita registrarse', 'Por favor, registrese primero.');
-          }
-        },
-      ),
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.black,
+      selectedItemColor: Theme.of(context).colorScheme.primary,
+      unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+      currentIndex: _selectedIndex, // Índice actual
+      onTap: _onItemTapped, // Actualiza el índice
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+        BottomNavigationBarItem(icon: Icon(Icons.radio), label: 'Radio'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.logout), label: 'Cerrar Sesión'),
+      ],
     );
   }
 
