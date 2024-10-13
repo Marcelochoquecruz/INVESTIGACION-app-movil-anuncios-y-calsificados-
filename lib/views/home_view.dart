@@ -134,7 +134,7 @@ class _HomeViewState extends State<HomeView>
                         fontSize: 20,
                         color: themeController.isDarkTheme.value
                             ? Colors.white// Texto azul oscuro en tema oscuro
-                            : Colors.white, // Texto oscuro en tema claro
+                            : Colors.black, // Texto oscuro en tema claro
                         fontStyle: FontStyle.italic, // Estilo de letra cursiva
                       ),
                       textAlign: TextAlign.center,
@@ -183,7 +183,7 @@ class _HomeViewState extends State<HomeView>
                       'lib/assets/logo.png',
                       height: 110,
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     _buildButton(
                         context, 'Iniciar Sesión', Icons.lock, '/login'),
                     const SizedBox(height: 30),

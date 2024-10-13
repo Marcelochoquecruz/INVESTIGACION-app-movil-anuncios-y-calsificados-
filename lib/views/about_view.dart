@@ -6,10 +6,17 @@ class AboutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Definir colores fijos para el texto y el divisor
-    Color primaryTextColor = Colors.blue[800]!; // Color azul oscuro para el texto principal
-    Color secondaryTextColor = Colors.blue[600]!; // Color azul medio para el texto secundario
-    Color dividerColor = Colors.lightBlue[300]!; // Color celeste claro para la línea divisoria
+    // Definir colores dinámicos para el texto y el divisor
+    Color primaryTextColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white // Color blanco para el tema oscuro
+        : Colors.blue[800]!; // Color azul oscuro para el tema claro
+    Color secondaryTextColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white70 // Color blanco claro para el tema oscuro
+        : Colors.blue[600]!; // Color azul medio para el tema claro
+    Color dividerColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey // Color gris para el divisor en tema oscuro
+        : Colors.lightBlue[
+            300]!; // Color celeste claro para el divisor en tema claro
 
     return Scaffold(
       appBar: const CustomNavBar(
