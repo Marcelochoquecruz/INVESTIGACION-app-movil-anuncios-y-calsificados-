@@ -199,7 +199,7 @@ class _ContinueViewState extends State<ContinueView> {
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-        BottomNavigationBarItem(icon: Icon(Icons.radio), label: 'Radio'),
+        BottomNavigationBarItem(icon: Icon(Icons.radio, color: Colors.red), label: 'Radio'), // Cambiar color a amarillo
         BottomNavigationBarItem(
             icon: Icon(Icons.logout), label: 'Cerrar Sesión'),
       ],

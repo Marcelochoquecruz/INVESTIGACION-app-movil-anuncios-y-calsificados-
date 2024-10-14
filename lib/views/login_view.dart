@@ -1,7 +1,9 @@
+import 'package:anuncios_domicilio/controllers/auth_controller.dart';
 import 'package:anuncios_domicilio/views/main_view.dart';
 import 'package:anuncios_domicilio/widgets/custom_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginView extends StatefulWidget {
@@ -24,6 +26,27 @@ class _LoginViewState extends State<LoginView> {
             .signInWithEmailAndPassword(
                 email: _emailController.text.trim(),
                 password: _passwordController.text.trim());
+
+        // Mostrar Snackbar de inicio de sesión exitoso
+        Get.snackbar(
+          'Éxito',
+          'Inicio de sesión exitoso para ${userCredential.user!.email}!',
+          duration: const Duration(seconds: 5),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.greenAccent,
+          colorText: Colors.black,
+          margin: const EdgeInsets.all(10),
+          borderRadius: 10,
+          titleText: const Text(
+            'Éxito',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            'Bienvenido de nuevo, ${userCredential.user!.email}!',
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          ),
+        );
+
         _navigateToMainView(userCredential.user!.email!);
       } on FirebaseAuthException catch (e) {
         _showErrorSnackBar(e.message ?? 'Error al iniciar sesión');
@@ -39,26 +62,39 @@ class _LoginViewState extends State<LoginView> {
         return;
       }
 
-      print('Google Sign In exitoso: ${googleUser.email}');
-
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      print('Autenticación de Google exitosa');
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      print('Credencial de Google creada');
-
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      print('Inicio de sesión en Firebase exitoso');
+
+      // Mostrar Snackbar de inicio de sesión exitoso
+      Get.snackbar(
+        'Éxito',
+        'Inicio de sesión exitoso para ${userCredential.user!.email}!',
+        duration: const Duration(seconds: 3),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        borderRadius: 10,
+        titleText: const Text(
+          'Éxito',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        messageText: Text(
+          'Bienvenido de nuevo, ${userCredential.user!.email}!',
+          style: const TextStyle(fontSize: 18, color: Colors.white),
+        ),
+      );
 
       _navigateToMainView(userCredential.user!.email!);
     } catch (e) {
-      print('Error detallado: $e');
       _showErrorSnackBar('Error inesperado al iniciar sesión con Google: $e');
     }
   }
@@ -247,12 +283,11 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Botón para continuar con GitHub (eliminado)
-                // En su lugar, botón para "Olvidaste tu contraseña"
+                // Botón para "Olvidaste tu contraseña"
                 TextButton(
                   onPressed: () {
-                    // Acción cuando el usuario presiona el botón
-                   
+                    Get.find<AuthController>()
+                        .openForgotPasswordDialog(); // Acción cuando el usuario presiona el botón
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.deepPurple,
@@ -260,7 +295,6 @@ class _LoginViewState extends State<LoginView> {
                         horizontal: 16, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
-                      
                     ),
                     elevation: 0,
                   ),

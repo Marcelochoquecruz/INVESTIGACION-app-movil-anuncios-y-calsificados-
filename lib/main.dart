@@ -1,11 +1,12 @@
-// lib/main.dart
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/theme_controller.dart';
+import 'controllers/auth_controller.dart'; // Importa el AuthController
 import 'routes/app_routes.dart';
 // Asegúrate de que este archivo esté configurado correctamente.
-import 'firebase_options.dart'; 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -13,8 +14,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp( MyApp());
+  // Asegúrate de registrar el AuthController aquí.
+  Get.put(AuthController()); // Registrar AuthController
+
+  runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   final ThemeController themeController = ThemeController();
 
@@ -25,11 +30,14 @@ class MyApp extends StatelessWidget {
     Get.put(themeController);
     return Obx(() => GetMaterialApp(
           title: 'Anuncios Domicilio',
-          themeMode: themeController.isDarkTheme.value ? ThemeMode.dark : ThemeMode.light,
+          themeMode: themeController.isDarkTheme.value
+              ? ThemeMode.dark
+              : ThemeMode.light,
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           initialRoute: '/',
           getPages: AppRoutes.routes,
           debugShowCheckedModeBanner: false, // Desactivar el debug banner
         ));
-  }}
+  }
+}
