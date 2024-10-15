@@ -26,6 +26,7 @@ dependencies:
   just_audio: ^0.9.41
   audioplayers: ^6.1.0
   intl: ^0.19.0
+  cloud_firestore: ^5.4.4
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -46,3 +47,4 @@ flutter:
     - lib/assets/logo1.png
     - lib/assets/google.png
     - lib/assets/facebook.png
+    - lib/assets/fondo.jpg

@@ -19,7 +19,7 @@ class AppRoutes {
         page: () =>
             const UltimosAnunciosView()), // Nueva ruta para Últimos Anuncios
     GetPage(name: '/login', page: () => const LoginView()),
-    GetPage(name: '/continue', page: () => ContinueView()),
+    GetPage(name: '/continue', page: () => const ContinueView()),
     GetPage(name: '/registration', page: () => const RegistrationView()),
     GetPage(name: '/about', page: () => const AboutView()),
     GetPage(

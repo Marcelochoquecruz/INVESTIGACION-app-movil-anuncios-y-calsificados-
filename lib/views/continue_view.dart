@@ -3,7 +3,6 @@ import 'package:anuncios_domicilio/widgets/custom_navbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../views/home_view.dart';
 import '../views/radio_view.dart'; // Importa la vista de Radio
 
 class ContinueView extends StatefulWidget {
@@ -18,10 +17,10 @@ class _ContinueViewState extends State<ContinueView> {
 
   final List<Widget> _views = [
     const UltimosAnunciosView(), // Pantalla de Inicio
-    Center(child: Text('Perfil')), // Placeholder para Perfil
-    Center(child: Text('Chat')), // Placeholder para Chat
+    const Center(child: Text('Perfil')), // Placeholder para Perfil
+    const Center(child: Text('Chat')), // Placeholder para Chat
     const RadioView(), // Vista de Radio
-    Center(child: Text('Cerrar Sesión')), // Placeholder para Logout
+    const Center(child: Text('Cerrar Sesión')), // Placeholder para Logout
   ];
 
   void _onItemTapped(int index) {

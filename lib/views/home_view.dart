@@ -14,12 +14,12 @@ class WaveShape extends CustomPainter {
           ? const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color.fromARGB(255, 45, 14, 87), Color.fromARGB(255, 9, 2, 41)],
+              colors: [Colors.black, Color(0xFFD9C2AD)],
             ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
           : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color.fromARGB(115, 172, 134, 238), Color.fromARGB(255, 243, 243, 247)],
+              colors: [Color(0xFFD9C2AD), Color.fromARGB(255, 186, 190, 186)],
             ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
       ..style = PaintingStyle.fill;
 
@@ -99,10 +99,10 @@ class _HomeViewState extends State<HomeView>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: themeController.isDarkTheme.value
-                  ? [Colors.deepPurple[700]!, Colors.deepPurple[300]!] // Degradado para tema oscuro
+                  ? [const Color.fromARGB(255, 15, 15, 15), const Color.fromARGB(255, 25, 20, 34)] // Degradado para tema oscuro
                   : [
                       Colors.deepPurple[700]!,
-                      Colors.deepPurple[300]!
+                      const Color.fromARGB(255, 20, 20, 20)
                     ], // Degradado para tema claro
             ),
           ),
@@ -136,7 +136,7 @@ class _HomeViewState extends State<HomeView>
                         //fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: themeController.isDarkTheme.value
-                            ? Colors.white// Texto azul oscuro en tema oscuro
+                            ? Colors.black// Texto azul oscuro en tema oscuro
                             : Colors.black, // Texto oscuro en tema claro
                         fontStyle: FontStyle.italic, // Estilo de letra cursiva
                       ),
@@ -239,7 +239,7 @@ class _HomeViewState extends State<HomeView>
           ),
           side: const BorderSide(color: Colors.lightBlueAccent, width: 1),
           shadowColor:
-              themeController.isDarkTheme.value ? Colors.black : Colors.grey,
+              themeController.isDarkTheme.value ? Colors.white : Colors.grey,
         ),
       ),
     );
@@ -248,7 +248,7 @@ class _HomeViewState extends State<HomeView>
   Widget _buildFooter(ThemeController themeController) {
     final footerTextStyle = TextStyle(
       fontSize: 10,
-      color: themeController.isDarkTheme.value ? Colors.white : Colors.black,
+      color: themeController.isDarkTheme.value ? Colors.white : Colors.white,
     );
 
     return Row(
