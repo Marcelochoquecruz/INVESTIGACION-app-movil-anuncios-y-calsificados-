@@ -145,7 +145,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.white70,
+                        color: Colors.deepPurple,
                       ),
                       onPressed: () {
                         setState(() {
@@ -179,7 +179,7 @@ class _RegistrationViewState extends State<RegistrationView> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.white70,
+                        color: Colors.deepPurple,
                       ),
                       onPressed: () {
                         setState(() {

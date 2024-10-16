@@ -179,7 +179,20 @@ class _ProfileViewState extends State<ProfileView> {
             } else if (snapshot.hasError) {
               return const Center(child: Text('Error al cargar los datos'));
             } else if (!snapshot.hasData || !snapshot.data!.exists) {
-              return const Center(child: Text('Felicidades su cuenta ha sido clonada \n Vuelva a ingresar para activar su cuenta'));
+              return Center(
+                child: Column(
+                  children: [
+                    Text('Felicidades su cuenta ha sido clonada'),
+                    Text('Vuelva a ingresar para activar su cuenta'),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/'); // Ir a la página de inicio
+                      },
+                      child: const Text('Salir'),
+                    ),
+                  ],
+                ),
+              );
             }
 
             final userData = snapshot.data!.data() as Map<String, dynamic>;

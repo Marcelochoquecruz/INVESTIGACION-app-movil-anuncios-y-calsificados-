@@ -102,7 +102,7 @@ class _LoginViewState extends State<LoginView> {
           },
         ),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.deepPurple, width: 2),
+          borderSide: BorderSide(color: Color.fromARGB(255, 203, 173, 255), width: 2),
         ),
       ),
       validator: (value) {
@@ -178,6 +178,19 @@ class _LoginViewState extends State<LoginView> {
         Get.snackbar(
           'Éxito',
           'Inicio de sesión exitoso para ${_emailController.text}!',
+          duration: const Duration(seconds: 5),
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.black,
+          margin: const EdgeInsets.all(10),
+          borderRadius: 10,
+          titleText: const Text(
+            'Éxito',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          messageText: Text(
+            'Inicio de sesión exitoso \n Bienvenido ${_emailController.text}!',
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          ),
         );
 
         Navigator.of(context).pushReplacement(
