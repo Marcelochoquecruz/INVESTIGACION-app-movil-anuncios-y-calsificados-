@@ -2,10 +2,10 @@ import 'package:anuncios_domicilio/controllers/auth_controller.dart';
 import 'package:anuncios_domicilio/views/main_view.dart';
 import 'package:anuncios_domicilio/widgets/custom_navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -22,6 +22,8 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Obtener el tema actual
+
     return Scaffold(
       appBar: const CustomNavBar(title: 'Regresar'),
       body: SingleChildScrollView(
@@ -32,17 +34,15 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTitle(),
+                _buildTitle(theme),
                 const SizedBox(height: 10),
                 _buildEmailField(),
                 const SizedBox(height: 24),
                 _buildPasswordField(),
                 const SizedBox(height: 40),
-                _buildLoginButton(),
+                _buildLoginButton(theme),
                 const SizedBox(height: 24),
-                _buildGoogleButton(),
-                const SizedBox(height: 12),
-                _buildFacebookButton(),
+                _buildSocialButtonsRow(),
                 const SizedBox(height: 12),
                 _buildForgotPasswordButton(),
               ],
@@ -53,13 +53,11 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildTitle() {
-    return const Text(
+  Widget _buildTitle(ThemeData theme) {
+    return Text(
       'Ingresa tus datos',
-      style: TextStyle(
-        fontSize: 30,
+      style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.bold,
-        color: Colors.deepPurple,
       ),
     );
   }
@@ -69,10 +67,7 @@ class _LoginViewState extends State<LoginView> {
       controller: _emailController,
       decoration: const InputDecoration(
         labelText: 'Correo',
-        prefixIcon: Icon(Icons.email, color: Colors.deepPurple),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.deepPurple, width: 2),
-        ),
+        prefixIcon: Icon(Icons.email),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -89,20 +84,16 @@ class _LoginViewState extends State<LoginView> {
       obscureText: _obscureText,
       decoration: InputDecoration(
         labelText: 'Contraseña',
-        prefixIcon: const Icon(Icons.lock, color: Colors.deepPurple),
+        prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
           icon: Icon(
             _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: Colors.deepPurple,
           ),
           onPressed: () {
             setState(() {
               _obscureText = !_obscureText;
             });
           },
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Color.fromARGB(255, 203, 173, 255), width: 2),
         ),
       ),
       validator: (value) {
@@ -113,39 +104,44 @@ class _LoginViewState extends State<LoginView> {
       },
     );
   }
-
-  Widget _buildLoginButton() {
-    return TextButton(
+  Widget _buildLoginButton(ThemeData theme) {
+    return CupertinoButton(
+      color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.face_rounded, size: 24),
+          SizedBox(width: 8),
+          Text('Iniciar sesión', style: TextStyle(fontSize: 20)),
+        ],
+      ),
       onPressed: _login,
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.deepPurple,
-        minimumSize: const Size(double.infinity, 50),
-      ),
-      child: const Text('Iniciar sesión', style: TextStyle(fontSize: 20)),
     );
   }
 
-  Widget _buildGoogleButton() {
-    return ElevatedButton.icon(
-      onPressed: _signInWithGoogle,
-      icon: Image.asset('lib/assets/google.png', height: 24),
-      label: const Text('Continuar con Google'),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-      ),
+  Widget _buildSocialButtonsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildSocialButton('lib/assets/google.png', 'Google'),
+        _buildSocialButton('lib/assets/facebook.png', 'Facebook'),
+      ],
     );
   }
 
-  Widget _buildFacebookButton() {
+  Widget _buildSocialButton(String asset, String label) {
     return ElevatedButton.icon(
-      onPressed: _signInWithFacebook,
-      icon: Image.asset('lib/assets/facebook.png', height: 24),
-      label: const Text('Continuar con Facebook'),
+      onPressed: () {}, // Implementar autenticación social
+      icon: Image.asset(asset, height: 24),
+      label: Text(label),
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(20),
+        elevation: 5,
       ),
     );
   }
@@ -156,9 +152,8 @@ class _LoginViewState extends State<LoginView> {
         Get.find<AuthController>().openForgotPasswordDialog();
       },
       child: const Text(
-        'Olvidaste tu contraseña?',
+        '¿Olvidaste tu contraseña?',
         style: TextStyle(
-          fontSize: 16,
           decoration: TextDecoration.underline,
         ),
       ),
@@ -174,25 +169,13 @@ class _LoginViewState extends State<LoginView> {
                 password: _passwordController.text.trim());
 
         await _saveUserToFirestore(userCredential.user!.uid);
-
         Get.snackbar(
           'Éxito',
           'Inicio de sesión exitoso para ${_emailController.text}!',
-          duration: const Duration(seconds: 5),
           snackPosition: SnackPosition.BOTTOM,
-          colorText: Colors.black,
-          margin: const EdgeInsets.all(10),
-          borderRadius: 10,
-          titleText: const Text(
-            'Éxito',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          messageText: Text(
-            'Inicio de sesión exitoso \n Bienvenido ${_emailController.text}!',
-            style: const TextStyle(fontSize: 18, color: Colors.black),
-          ),
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          colorText: Theme.of(context).colorScheme.onSurface,
         );
-
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const MainView()),
         );
@@ -211,15 +194,6 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Future<void> _signInWithGoogle() async {
-    // Implementar autenticación con Google
-  }
-
-  Future<void> _signInWithFacebook() async {
-    // Implementar autenticación con Facebook
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 }

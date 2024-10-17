@@ -1,56 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'dart:ui';
 import '../controllers/theme_controller.dart';
-
-class WaveShape extends CustomPainter {
-  final bool isShadow;
-
-  WaveShape({this.isShadow = false});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..shader = isShadow
-          ? const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.black, Color(0xFFD9C2AD)],
-            ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
-          : const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFD9C2AD), Color.fromARGB(255, 186, 190, 186)],
-            ).createShader(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)))
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-
-    // Dibujo de la curva de izquierda a derecha
-    // Inicio en el punto (0, tamaño de la altura)
-    path.moveTo(0, size.height);
-    // Curva cuadrática pasando por el punto (ancho del tamaño * 0.25, altura del tamaño * 0.8)
-    path.quadraticBezierTo(size.width * 0.100, size.height * 0.8,
-        // Curva cuadrática pasando por el punto (ancho del tamaño * 0.5, altura del tamaño * 0.9)
-        size.width * 0.5, size.height * 0.9);
-    // Curva cuadrática pasando por el punto (ancho del tamaño * 0.75, tamaño de la altura)
-    path.quadraticBezierTo(
-        size.width * 0.75, size.height, 
-        // Línea recta al punto (ancho del tamaño, altura del tamaño * 0.8)
-        size.width, size.height * 0.8);
-    // Línea recta al punto (ancho del tamaño, 0)
-    path.lineTo(size.width, 0);
-    // Línea recta al punto (0, 0)
-    path.lineTo(0, 0);
-    // Cierre del camino
-    path.close();
-
-    // Dibujo en el lienzo
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -67,15 +19,20 @@ class _HomeViewState extends State<HomeView>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 1.0, end: 1.3).animate(
+    _animation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut,
+        curve: Curves.easeInOutCubic,
       ),
     );
   }
@@ -89,115 +46,181 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.put(ThemeController());
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Obx(
         () => Container(
-          // Fondo con degradado
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: themeController.isDarkTheme.value
-                  ? [const Color.fromARGB(255, 15, 15, 15), const Color.fromARGB(255, 25, 20, 34)] // Degradado para tema oscuro
+                  ? [
+                      const Color(0xFF1A1A1A),
+                      const Color(0xFF2D2D2D),
+                    ]
                   : [
-                      Colors.deepPurple[700]!,
-                      const Color.fromARGB(255, 20, 20, 20)
-                    ], // Degradado para tema claro
+                      const Color(0xFFF5F5F7),
+                      const Color(0xFFE8E8E8),
+                    ],
             ),
           ),
           child: Stack(
             children: [
-              // Sombra externa
-              CustomPaint(
-                painter:
-                    WaveShape(isShadow: true), // Pintamos el borde sombreado
-                child: Container(
-                  height: MediaQuery.of(context).size.height +
-                      10, // Un poco más grande para el sombreado
+              // Burbujas de fondo animadas
+              Positioned(
+                top: -50,
+                right: -30,
+                child: AnimatedGradientBubble(
+                  size: 200,
+                  colors: themeController.isDarkTheme.value
+                      ? const [Color(0xFF2D2D2D), Color(0xFF1A1A1A)]
+                      : const [Color(0xFFE3E3E3), Color(0xFFF0F0F0)],
                 ),
               ),
-              // Figura original
-              CustomPaint(
-                painter: WaveShape(),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
+              Positioned(
+                bottom: size.height * 0.3,
+                left: -40,
+                child: AnimatedGradientBubble(
+                  size: 150,
+                  colors: themeController.isDarkTheme.value
+                      ? const [Color(0xFF2D2D2D), Color(0xFF1A1A1A)]
+                      : const [Color(0xFFE3E3E3), Color(0xFFF0F0F0)],
                 ),
               ),
-              Center(
+              // Contenido principal
+              SafeArea(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
-                    // Eslogan de la app
-                    Text(
-                      'Tu Hogar\n Nuestro compromiso',
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: themeController.isDarkTheme.value
-                            ? Colors.black// Texto azul oscuro en tema oscuro
-                            : Colors.black, // Texto oscuro en tema claro
-                        fontStyle: FontStyle.italic, // Estilo de letra cursiva
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(
-                        height: 10), // Aumentamos el espacio superior
-                    // Icono del sol/luna con textos "Día" y "Noche"
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ScaleTransition(
-                          scale: _animation,
-                          child: IconButton(
-                            icon: Icon(
-                              themeController.isDarkTheme.value
-                                  ? Icons
-                                      .dark_mode // Otra luna para tema oscuro
-                                  : Icons.wb_sunny, // Sol para tema claro
-                              color: themeController.isDarkTheme.value
-                                  ? Colors.black
-                                  : Colors.black,
+                    const SizedBox(height: 20),
+                    // Modo claro/oscuro
+                    GestureDetector(
+                      onTap: () => themeController.toggleTheme(),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: themeController.isDarkTheme.value
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.white.withOpacity(0.7),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              spreadRadius: 0,
                             ),
-                            onPressed: () => themeController.toggleTheme(),
-                            iconSize: 25, // Tamaño del icono más grande
-                          ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          themeController.isDarkTheme.value
-                              ? '¡De noche!'
-                              : '¡De día!', // Cambia el texto
-                          style: TextStyle(
-                            fontSize: 10, // Tamaño más grande del texto
-                            color: themeController.isDarkTheme.value
-                                ? Colors.black87
-                                : Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              themeController.isDarkTheme.value
+                                  ? Icons.dark_mode
+                                  : Icons.light_mode,
+                              color: themeController.isDarkTheme.value
+                                  ? Colors.white
+                                  : Colors.black,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              themeController.isDarkTheme.value
+                                  ? 'Modo Oscuro'
+                                  : 'Modo Claro',
+                              style: TextStyle(
+                                color: themeController.isDarkTheme.value
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                    const SizedBox(
-                        height: 10), // Espacio entre el icono y el logo
-                    // Logo de la app
-                    Image.asset(
-                      'lib/assets/logo.png',
-                      height: 110,
+                    const SizedBox(height: 10),
+                    // Logo animado
+                    ScaleTransition(
+                      scale: _animation,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: themeController.isDarkTheme.value
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.white.withOpacity(0.7),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: Image.asset(
+                          'lib/assets/logo.png',
+                          height: 100,
+                          width: 100,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
+                    // Título
+                    Text(
+                      'Tu Hogar',
+                      style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w700,
+                        color: themeController.isDarkTheme.value
+                            ? Colors.white
+                            : Colors.black,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    Text(
+                      'Nuestro Compromiso',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: themeController.isDarkTheme.value
+                            ? Colors.white.withOpacity(0.7)
+                            : Colors.black.withOpacity(0.7),
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const Spacer(),
+                    // Botones
                     _buildButton(
-                        context, 'Iniciar Sesión', Icons.lock, '/login'),
+                      context,
+                      'Iniciar Sesión',
+                      Icons.face_rounded,
+                      '/login',
+                      true,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildButton(
+                      context,
+                      'Continuar como Invitado',
+                      Icons.person_outline_rounded,
+                      '/continue',
+                      false,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildButton(
+                      context,
+                      'Crear Nueva Cuenta',
+                      Icons.add_rounded,
+                      '/registration',
+                      false,
+                    ),
                     const SizedBox(height: 30),
-                    _buildButton(context, 'Continuar sin Registrarse',
-                        Icons.input, '/continue'),
-                    const SizedBox(height: 30),
-                    _buildButton(context, 'Crear Cuenta', Icons.person_add,
-                        '/registration'),
-                    const SizedBox(height: 110),
-                    // Pie de página
-                    _buildFooter(themeController), // Reemplazado por el nuevo widget
+                    // Footer
+                    _buildFooter(themeController),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -208,55 +231,196 @@ class _HomeViewState extends State<HomeView>
     );
   }
 
-  Widget _buildButton(
-      BuildContext context, String text, IconData icon, String route) {
+Widget _buildButton(
+    BuildContext context,
+    String text,
+    IconData icon,
+    String route,
+    bool isPrimary,
+  ) {
     final ThemeController themeController = Get.find<ThemeController>();
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: ElevatedButton.icon(
-        onPressed: () => Get.toNamed(route),
-        icon: Icon(icon, size: 26),
-        label: Obx(
-          () => Text(
-            text,
-            style: TextStyle(
-              color: themeController.isDarkTheme.value
-                  ? Colors.white
-                  : Colors.black, // Esteo es para cambiar el color de los textos botones
-              
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.85,
+      height: 54,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => Get.toNamed(route),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: text == 'Continuar como Invitado'
+                      ? Colors.black // Botón del medio siempre negro
+                      : isPrimary
+                          ? Colors.white // Primer botón siempre blanco
+                          : (themeController.isDarkTheme.value
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.white.withOpacity(0.7)),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: text == 'Continuar como Invitado' || isPrimary
+                        ? Colors.transparent
+                        : (themeController.isDarkTheme.value
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.black.withOpacity(0.1)),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      icon,
+                      color: text == 'Continuar como Invitado'
+                          ? Colors
+                              .white // Icono blanco para el botón negro del medio
+                          : isPrimary
+                              ? Colors.black // Icono negro para el botón blanco
+                              : (themeController.isDarkTheme.value
+                                  ? Colors.white
+                                  : Colors.black),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      text,
+                      style: TextStyle(
+                        color: text == 'Continuar como Invitado'
+                            ? Colors
+                                .white // Texto blanco para el botón negro del medio
+                            : isPrimary
+                                ? Colors
+                                    .black // Texto negro para el botón blanco
+                                : (themeController.isDarkTheme.value
+                                    ? Colors.white
+                                    : Colors.black),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.isDarkTheme.value
-              ? Colors.grey.shade900
-              : const Color.fromARGB(255, 255, 255, 255),
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          textStyle: const TextStyle(fontSize: 18),
-          elevation: themeController.isDarkTheme.value ? 10 : 20,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          side: const BorderSide(color: Colors.lightBlueAccent, width: 1),
-          shadowColor:
-              themeController.isDarkTheme.value ? Colors.white : Colors.grey,
         ),
       ),
     );
   }
-
   Widget _buildFooter(ThemeController themeController) {
-    final footerTextStyle = TextStyle(
-      fontSize: 10,
-      color: themeController.isDarkTheme.value ? Colors.white : Colors.white,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      decoration: BoxDecoration(
+        color: themeController.isDarkTheme.value
+            ? Colors.black.withOpacity(0.3)
+            : Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '© DyCIT',
+            style: TextStyle(
+              color: themeController.isDarkTheme.value
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.black.withOpacity(0.7),
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Container(
+              height: 12,
+              width: 1,
+              color: themeController.isDarkTheme.value
+                  ? Colors.white.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.3),
+            ),
+          ),
+          Text(
+            'UATF 2024',
+            style: TextStyle(
+              color: themeController.isDarkTheme.value
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.black.withOpacity(0.7),
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
+  }
+}
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text('© DyCIT-2024', style: footerTextStyle),
-        Text('© UATF-2024', style: footerTextStyle),
-      ],
+class AnimatedGradientBubble extends StatefulWidget {
+  final double size;
+  final List<Color> colors;
+
+  const AnimatedGradientBubble({
+    Key? key,
+    required this.size,
+    required this.colors,
+  }) : super(key: key);
+
+  @override
+  _AnimatedGradientBubbleState createState() => _AnimatedGradientBubbleState();
+}
+
+class _AnimatedGradientBubbleState extends State<AnimatedGradientBubble>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          width: widget.size,
+          height: widget.size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              colors: widget.colors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              transform: GradientRotation(_controller.value * 2 * 3.14159),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -12,79 +13,147 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   String? uid;
+  final TextEditingController _descriptionController = TextEditingController();
 
-  // Controladores para los campos del formulario
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _photoUrlController = TextEditingController();
+  final List<String> titleOptions = [
+    'ALBAÑILERÍA',
+    'CARPINTERÍA',
+    'LAVANDERÍA',
+    'JARDINERÍA',
+    'COCINA',
+    'FONTANERÍA',
+    'ELECTRICIDAD',
+    'MECÁNICA',
+    'NIÑERA',
+    'CHOFER',
+    'PINTURA',
+    'ASEO'
+  ];
 
-  Future<void> _getUserData() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+  final List<String> typeOptions = [
+    'Se necesita',
+    'Se ofrece',
+    'Solo por hoy',
+    'A medio tiempo necesito',
+    'Con urgencia se requiere',
+    'Disponible ahora',
+    'De forma temporal',
+    'De forma Permanente',
+    'De ocasión requiero'
+  ];
 
-    uid = user.uid; // Guardar UID
-
-    // Cargar los datos del usuario desde Firestore
-    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    if (doc.exists) {
-      final userData = doc.data() as Map<String, dynamic>;
-      _nameController.text = userData['name'] ?? '';
-      _phoneController.text = userData['phone'] ?? '';
-      _photoUrlController.text = userData['photoUrl'] ?? '';
-    }
-  }
+  String? selectedTitle;
+  String? selectedType;
 
   @override
   void initState() {
     super.initState();
-    _getUserData(); // Cargar los datos al inicializar
+    _getUserData();
   }
 
-  void _showEditProfileDialog() {
+  Future<void> _getUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() => uid = user.uid);
+    }
+  }
+
+  Future<void> _createAd() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await FirebaseFirestore.instance.collection('ads').add({
+      'uid': user.uid,
+      'title': selectedTitle,
+      'type': selectedType,
+      'description': _descriptionController.text.trim(),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    setState(() {
+      selectedTitle = null;
+      selectedType = null;
+      _descriptionController.clear();
+    });
+
+    Get.snackbar(
+      '¡Éxito!',
+      'Anuncio creado con éxito.',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.greenAccent.shade100,
+      colorText: Colors.black,
+      margin: const EdgeInsets.all(20),
+      borderRadius: 10,
+      duration: const Duration(seconds: 3),
+      animationDuration: const Duration(milliseconds: 500),
+      boxShadows: [
+        BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5))
+      ],
+    );
+  }
+
+  void _showAdForm() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          title: const Text('Editar Información'),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text('Crear Anuncio',
+              style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold, color: Colors.deepPurple),
+              textAlign: TextAlign.center),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                _buildDropdown('Selecciona un Servicio', titleOptions,
+                    (newValue) {
+                  setState(() => selectedTitle = newValue);
+                }),
+                const SizedBox(height: 15),
+                _buildDropdown('Selecciona un Tipo', typeOptions, (newValue) {
+                  setState(() => selectedType = newValue);
+                }),
+                const SizedBox(height: 15),
                 TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Descripción',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          const BorderSide(color: Colors.deepPurple, width: 2),
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(
-                    labelText: 'Teléfono',
-                  ),
-                ),
-                TextField(
-                  controller: _photoUrlController,
-                  decoration: const InputDecoration(
-                    labelText: 'URL de la Foto',
-                  ),
+                  maxLines: 3,
                 ),
               ],
             ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                // Lógica para actualizar el perfil
-                _updateProfile();
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Guardar'),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancelar',
+                  style: GoogleFonts.poppins(color: Colors.grey)),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
+                _createAd();
+                Navigator.of(context).pop();
               },
-              child: const Text('Cancelar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              child: Text('Crear',
+                  style: GoogleFonts.poppins(color: Colors.white)),
             ),
           ],
         );
@@ -92,70 +161,62 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Future<void> _updateProfile() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // Actualizar el nombre, teléfono y URL de la foto en Firestore
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-        'name': _nameController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'photoUrl': _photoUrlController.text.trim(),
-      });
-
-      // Notificación de éxito
-      Get.snackbar(
-        'Éxito',
-        'Perfil actualizado correctamente.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.greenAccent,
-        colorText: Colors.black,
-      );
-    }
+  Widget _buildDropdown(
+      String hint, List<String> options, ValueChanged<String?> onChanged) {
+    return DropdownButtonFormField<String>(
+      value: hint == 'Selecciona un Servicio' ? selectedTitle : selectedType,
+      hint: Text(hint, style: GoogleFonts.poppins()),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+        ),
+      ),
+      items: options.map((value) {
+        return DropdownMenuItem(
+            value: value, child: Text(value, style: GoogleFonts.poppins()));
+      }).toList(),
+      onChanged: onChanged,
+    );
   }
 
-  void _showProfileDetails() {
+  void _showUserAds() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final adsSnapshot = await FirebaseFirestore.instance
+        .collection('ads')
+        .where('uid', isEqualTo: user.uid)
+        .get();
+
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          title: const Text('Detalles de Mi Perfil'),
-          content: FutureBuilder<DocumentSnapshot>(
-            future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return const Center(child: Text('Error al cargar los datos'));
-              } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                return const Center(child: Text('No se encontraron datos'));
-              }
-
-              final userData = snapshot.data!.data() as Map<String, dynamic>;
-
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('UID: $uid'),
-                    const SizedBox(height: 10),
-                    Text('Correo: ${userData['email'] ?? 'Sin correo'}'),
-                    const SizedBox(height: 10),
-                    Text('Nombre: ${userData['name'] ?? 'Sin nombre'}'),
-                    const SizedBox(height: 10),
-                    Text('Teléfono: ${userData['phone'] ?? 'Sin teléfono'}'),
-                    const SizedBox(height: 10),
-                    Text('URL de la Foto: ${userData['photoUrl'] ?? 'Sin foto'}'),
-                  ],
-                ),
-              );
-            },
+          title: Text('Mis Anuncios',
+              style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+          content: SingleChildScrollView(
+            child: Column(
+              children: adsSnapshot.docs.map((doc) {
+                final data = doc.data();
+                return ListTile(
+                  title: Text(data['title'] ?? 'Sin título',
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                  subtitle: Text(data['description'] ?? 'Sin descripción',
+                      style: GoogleFonts.poppins()),
+                  trailing: Text(data['type'] ?? '',
+                      style: GoogleFonts.poppins(fontStyle: FontStyle.italic)),
+                );
+              }).toList(),
+            ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cerrar'),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cerrar', style: GoogleFonts.poppins()),
             ),
           ],
         );
@@ -166,69 +227,187 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Perfil'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return const Center(child: Text('Error al cargar los datos'));
-            } else if (!snapshot.hasData || !snapshot.data!.exists) {
-              return Center(
-                child: Column(
-                  children: [
-                    Text('Felicidades su cuenta ha sido clonada'),
-                    Text('Vuelva a ingresar para activar su cuenta'),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/'); // Ir a la página de inicio
-                      },
-                      child: const Text('Salir'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                'MI PERFIL',
+                style: GoogleFonts.montserrat(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      spreadRadius: 5,
                     ),
                   ],
                 ),
-              );
-            }
+                child: FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(uid)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Error al cargar los datos',
+                          style: GoogleFonts.poppins(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '¡FELICIDADES, SU CUENTA SE HA CREADO!',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () =>
+                                Navigator.of(context).pushNamed('/'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
+                            ),
+                            child: Text(
+                              'Salir y activar',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
 
-            final userData = snapshot.data!.data() as Map<String, dynamic>;
-
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '¡Felicidades, su cuenta ha sido hackeada!',
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Sus datos hackeados son:',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 40),
-                  Text('UID: $uid'),
-                  const SizedBox(height: 20),
-                  Text('Correo: ${userData['email'] ?? 'Sin correo'}'),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    onPressed: _showEditProfileDialog, // Abre el diálogo para editar información
-                    child: const Text('Editar Perfil'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _showProfileDetails, // Abre el diálogo para mostrar todos los datos
-                    child: const Text('Mostrar Mi Perfil'),
-                  ),
-                ],
+                    final userData =
+                        snapshot.data!.data() as Map<String, dynamic>;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.deepPurple.shade100,
+                          child: const Icon(Icons.person,
+                              size: 80, color: Colors.deepPurple),
+                        ),
+                        const SizedBox(height: 30),
+                        Text(
+                          'Correo:',
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          userData['email'] ?? 'Sin correo',
+                          style: GoogleFonts.poppins(fontSize: 16),
+                        ),
+                        const SizedBox(height: 30),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.edit, color: Colors.white),
+                          label: Text('Editar Perfil',
+                              style: GoogleFonts.poppins(color: Colors.white)),
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed('/editar-perfil'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
-            );
-          },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAdForm,
+        backgroundColor: Colors.deepPurple,
+        elevation: 8,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        color: Colors.deepPurple,
+        child: SizedBox(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildBottomBarButton(
+                text: 'Mis Anuncios',
+                icon: Icons.list_alt,
+                onPressed: _showUserAds,
+              ),
+              _buildBottomBarButton(
+                text: 'Cerrar Sesión',
+                icon: Icons.exit_to_app,
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushNamed('/');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomBarButton(
+      {required String text,
+      required IconData icon,
+      required VoidCallback onPressed}) {
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(icon, color: Colors.white),
+              Text(text,
+                  style:
+                      GoogleFonts.poppins(color: Colors.white, fontSize: 12)),
+            ],
+          ),
         ),
       ),
     );
