@@ -10,7 +10,8 @@ class RadioView extends StatefulWidget {
   _RadioViewState createState() => _RadioViewState();
 }
 
-class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMixin {
+class _RadioViewState extends State<RadioView>
+    with SingleTickerProviderStateMixin {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
   double _volume = 1.0;
@@ -37,7 +38,8 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
       await _audioPlayer.pause();
       _animationController.stop();
     } else {
-      await _audioPlayer.play(UrlSource('https://azura2.bitstreaming.net:8000/radio128.aac'));
+      await _audioPlayer
+          .play(UrlSource('https://azura2.bitstreaming.net:8000/radio128.aac'));
       _animationController.repeat();
     }
     setState(() {
@@ -65,105 +67,134 @@ class _RadioViewState extends State<RadioView> with SingleTickerProviderStateMix
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple[700]!, Colors.deepPurple[300]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Color(0xFF1C1C1E), // Color de fondo oscuro estilo iOS
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Programa Cambalache',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          child: Container(
+            width: 350, // Establece un ancho fijo para el contenedor
+            padding: const EdgeInsets.all(20), // Aumentar el padding
+            margin: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.blue[300]!,
+                  Colors.blue[700]!
+                ], // Colores degradados
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-             
-              const Text(
-                'Horario: Lunes a Viernes, 07:00 - 12:00',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-              const Text(
-                'Del medio dia, no te lo pierdas!!!',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-              const SizedBox(height: 10),
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (_, child) {
-                  return Transform.rotate(
-                    angle: _animationController.value * 2 * 3.14159,
-                    child: child,
-                  );
-                },
-                child: const Icon(
-                  Icons.radio,
-                  size: 120,
-                  color: Colors.deepPurple,
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26, // Sombra
+                  blurRadius: 10,
+                  offset: Offset(0, 5),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _togglePlay,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(20),
-                      elevation: 10,
-                    ),
-                    child: Icon(
-                      _isPlaying ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-                      size: 30,
-                      color: Colors.deepPurple[800],
-                    ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Programa Cambalache',
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const Text(
+                  'Horario: Lunes a Viernes, 07:00 - 12:00',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                const Text(
+                  'Del medio día, no te lo pierdas!!!',
+                  style: TextStyle(fontSize: 14, color: Colors.white),
+                ),
+                const SizedBox(height: 8),
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (_, child) {
+                    return Transform.rotate(
+                      angle: _animationController.value * 2 * 3.14159,
+                      child: child,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.radio,
+                    size: 100,
+                    color: Colors.white,
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: _stopPlayback,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(20),
-                      elevation: 10,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _togglePlay,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(16),
+                        elevation: 8,
+                      ),
+                      child: Icon(
+                        _isPlaying
+                            ? FontAwesomeIcons.pause
+                            : FontAwesomeIcons.play,
+                        size: 26,
+                        color: Colors.black,
+                      ),
                     ),
-                    child: const Icon(
-                      FontAwesomeIcons.stop,
-                      size: 30,
-                      color: Colors.white,
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _stopPlayback,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(16),
+                        elevation: 8,
+                      ),
+                      child: const Icon(
+                        FontAwesomeIcons.stop,
+                        size: 26,
+                        color: Colors.white,
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Volumen: ${(_volume * 100).toInt()}%',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                ),
+                Container(
+                  width: 250, // Ancho reducido del slider
+                  child: Slider(
+                    value: _volume,
+                    onChanged: _setVolume,
+                    min: 0,
+                    max: 1,
+                    activeColor: Colors.black,
+                    inactiveColor: Colors.grey[400],
                   ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              Text(
-                'Volumen: ${(_volume * 100).toInt()}%',
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-              ),
-              Slider(
-                value: _volume,
-                onChanged: _setVolume,
-                min: 0,
-                max: 1,
-                activeColor: Colors.black,
-                inactiveColor: Colors.grey[400],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Hora y Fecha: ${DateFormat('HH:mm dd/MM/yyyy').format(DateTime.now())}',
-                style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Potosí, Bolivia',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white70),
-              ),
-            ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Hora y Fecha: ${DateFormat('HH:mm dd/MM/yyyy').format(DateTime.now())}',
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const Text(
+                  'Potosí, Bolivia',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white70),
+                ),
+              ],
+            ),
           ),
         ),
       ),
