@@ -62,7 +62,7 @@ class _RegistrationViewState extends State<RegistrationView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       appBar: const CustomNavBar(title: 'Registro'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 60),
@@ -98,7 +98,7 @@ class _RegistrationViewState extends State<RegistrationView> {
       style: TextStyle(
         fontSize: 25,
         fontWeight: FontWeight.bold,
-        color: Theme.of(context).colorScheme.onBackground,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       textAlign: TextAlign.center,
     );
@@ -181,7 +181,7 @@ class _RegistrationViewState extends State<RegistrationView> {
       prefixIcon: Icon(icon, color: theme.iconTheme.color, size: 28),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: theme.colorScheme.surfaceVariant,
+      fillColor: theme.colorScheme.surfaceContainerHighest,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,

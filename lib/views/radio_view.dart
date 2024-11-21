@@ -167,7 +167,7 @@ class _RadioViewState extends State<RadioView>
                   'Volumen: ${(_volume * 100).toInt()}%',
                   style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
-                Container(
+                SizedBox(
                   width: 250, // Ancho reducido del slider
                   child: Slider(
                     value: _volume,

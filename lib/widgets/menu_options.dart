@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart'; // Usamos Cupertino para el estilo iOS
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/theme_controller.dart';
 

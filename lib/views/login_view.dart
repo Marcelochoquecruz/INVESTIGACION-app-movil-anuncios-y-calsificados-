@@ -107,6 +107,7 @@ class _LoginViewState extends State<LoginView> {
   Widget _buildLoginButton(ThemeData theme) {
     return CupertinoButton(
       color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+      onPressed: _login,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
@@ -115,7 +116,6 @@ class _LoginViewState extends State<LoginView> {
           Text('Iniciar sesión', style: TextStyle(fontSize: 20)),
         ],
       ),
-      onPressed: _login,
     );
   }
 
@@ -173,7 +173,7 @@ class _LoginViewState extends State<LoginView> {
           'Éxito',
           'Inicio de sesión exitoso para ${_emailController.text}!',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           colorText: Theme.of(context).colorScheme.onSurface,
         );
         Navigator.of(context).pushReplacement(

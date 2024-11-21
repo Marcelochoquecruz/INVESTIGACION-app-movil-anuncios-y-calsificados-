@@ -374,10 +374,10 @@ class AnimatedGradientBubble extends StatefulWidget {
   final List<Color> colors;
 
   const AnimatedGradientBubble({
-    Key? key,
+    super.key,
     required this.size,
     required this.colors,
-  }) : super(key: key);
+  });
 
   @override
   _AnimatedGradientBubbleState createState() => _AnimatedGradientBubbleState();
